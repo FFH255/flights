@@ -5,8 +5,3 @@ FlightView::FlightView(QObject *parent) : Table(parent)
 
 }
 
-ModelResponse FlightView::getModel()
-{
-
-}
-

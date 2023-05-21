@@ -18,15 +18,15 @@ EditAircraftDialog::EditAircraftDialog(QWidget *parent, const QModelIndex *index
     {
         aircraftTable = new AircraftTable(this);
         int id = Utils::getIdByIndex(index);
-        AircraftResponse res = aircraftTable->selectById(id);
+        AircraftResponse *res = aircraftTable->selectById(id);
 
-        if (!res.ok)
+        if (res->error)
         {
-            Logger::exec(this, MessageType::ServerFail, "Something went wrong.", res.errorMessage);
+            //handle error
             return;
         }
 
-        originAircraft = res.aircraft;
+        originAircraft = res->aircraft;
         ui->nameLineEdit->setText(originAircraft->model);
         ui->seatsSpinBox->setValue(originAircraft->seats);
     }
@@ -61,11 +61,11 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
     if (originAircraft == nullptr)
     {
-        Response res = aircraftTable->insert(name, seats);
+        Response *res = aircraftTable->insert(name, seats);
 
-        if (!res.ok)
+        if (res->error)
         {
-            Logger::exec(this, MessageType::ServerFail, "Something went wrong.", res.errorMessage);
+            //handle error
             return;
         }
 
@@ -79,11 +79,11 @@ void EditAircraftDialog::onApplyPushButtonClicked()
         Logger::exec(this, MessageType::SameValue, "Chage something before applying.");
         return;
     }
-    Response res = aircraftTable->updateById(originAircraft->id, name, seats);
+    Response *res = aircraftTable->updateById(originAircraft->id, name, seats);
 
-    if (!res.ok)
+    if (res->error)
     {
-        Logger::exec(this, MessageType::ServerFail, "Can not update value.", res.errorMessage);
+        //handle error
         return;
     }
     emit modelChanged();
@@ -92,11 +92,11 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
 void EditAircraftDialog::onDeletePushButtonClicked()
 {
-    Response res = aircraftTable->deteleById(originAircraft->id);
+    Response *res = aircraftTable->deteleById(originAircraft->id);
 
-    if (!res.ok)
+    if (res->error)
     {
-        Logger::exec(this, MessageType::ServerFail, "Can not delete value.", res.errorMessage);
+        //handle error
         return;
     }
     emit modelChanged();

@@ -8,113 +8,109 @@ AircraftTable::AircraftTable(QObject *parent)
 
 }
 
-ModelResponse AircraftTable::getModel()
+ModelResponse *AircraftTable::getModel()
 {
-    ModelResponse result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return result = {{false, res.errorMessage}, nullptr};
+        return new ModelResponse(nullptr, res->error);
     }
 
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec("SELECT * FROM airplane");
 
     if (!ok)
     {
-        return result = {{false, query->lastError().text()}, nullptr};
+        return new ModelResponse(nullptr, new QSqlError(query->lastError()));
     }
 
     QSqlQueryModel *model = new QSqlQueryModel(parent);
     model->setQuery(std::move(*query));
-    return result = {{true, ""}, model};
+    return new ModelResponse(model, nullptr);
 }
 
-AircraftResponse AircraftTable::selectById(int id)
+AircraftResponse *AircraftTable::selectById(int id)
 {
-    AircraftResponse result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return result = {{false, res.errorMessage}, nullptr};
+        return new AircraftResponse(nullptr, res->error);
     }
     QString queryString = QString("SELECT * FROM airplane WHERE id = %1").arg(id);
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return result = {{false, query->lastError().text()}, nullptr};
+        return new AircraftResponse(nullptr, new QSqlError(query->lastError()));
     }
     query->next();
     int index = query->value(0).toInt();
     QString name = query->value(1).toString();
     int seats = query->value(2).toInt();
-    return result = {{true, ""}, new AircraftModel(index, name, seats)};
+
+    return new AircraftResponse(new AircraftModel(index, name, seats), nullptr);
 }
 
-Response AircraftTable::updateById(int id, QString name, int seats)
+Response *AircraftTable::updateById(int id, QString name, int seats)
 {
-    Response result;
-    QueryResponse res = getQuery();
-    if (!res.ok)
+    QueryResponse *res = getQuery();
+    if (res->error != nullptr)
     {
-        return result = {false, res.errorMessage};
+        return new Response(res->error);
     }
     QString queryString = QString("CALL update_airplane(%1, '%2', %3::smallint);")
                               .arg(id)
                               .arg(name)
                               .arg(seats);
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
     if (!ok)
     {
-        return result = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
-    return result = {true, ""};
+    return new Response(nullptr);
 }
 
-Response AircraftTable::insert(QString name, int seats)
+Response *AircraftTable::insert(QString name, int seats)
 {
-    Response result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if(!res.ok)
+    if(res->error != nullptr)
     {
-        return result = {false, res.errorMessage};
+        return new Response(res->error);
     }
     QString queryString = QString("CALL insert_airplane('%1'::varchar(32), %2::smallint);")
                               .arg(name)
                               .arg(seats);
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return result = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
-    return result = {true, ""};
+    return new Response(nullptr);
 }
 
-Response AircraftTable::deteleById(int id)
+Response *AircraftTable::deteleById(int id)
 {
-    Response result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return result = {false, res.errorMessage};
+        return new Response(res->error);
     }
     QString queryString = QString("CALL delete_airplane(%1);").arg(id);
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return result = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
-    return result = {true, ""};
+    return new Response(nullptr);
 }
 

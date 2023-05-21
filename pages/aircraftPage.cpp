@@ -9,15 +9,14 @@ AircraftPage::AircraftPage(QWidget *parent) :
     ui->setupUi(this);
     aircraftTable = new AircraftTable(this);
 
-    ModelResponse res = aircraftTable->getModel();
-    if (!res.ok)
+    ModelResponse *res = aircraftTable->getModel();
+    if (res->error)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Something went wrong."));
-        qDebug() << res.errorMessage;
+        //handle error
         return;
     }
 
-    ui->aircraftTableView->setModel(res.model);
+    ui->aircraftTableView->setModel(res->model);
     ui->aircraftTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->aircraftTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->aircraftTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -50,13 +49,12 @@ void AircraftPage::openAddAircraftDialog()
 
 void AircraftPage::update()
 {
-    ModelResponse res = aircraftTable->getModel();
-    if (!res.ok)
+    ModelResponse *res = aircraftTable->getModel();
+    if (res->error)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Something went wrong."));
-        qDebug() << res.errorMessage;
+        //handle error
         return;
     }
 
-    ui->aircraftTableView->setModel(res.model);
+    ui->aircraftTableView->setModel(res->model);
 }

@@ -36,16 +36,15 @@ EditTownDialog::~EditTownDialog()
 
 void EditTownDialog::setCurrent(int id)
 {
-    TownResponse res = townTable->selectById(id);
+    TownResponse *res = townTable->selectById(id);
 
-    if (!res.ok)
+    if (res->error)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can not open this row."));
-        qDebug() << res.errorMessage;
+        //handle error
         return;
     }
 
-    townModel = res.town;
+    townModel = res->town;
     ui->townLineEdit->setText(townModel->name);
     ui->countryLineEdit->setText(townModel->country);
 }
@@ -69,23 +68,21 @@ void EditTownDialog::onApplyPushButtonClicked()
 
     if (townModel == nullptr)
     {
-        Response res = townTable->insert(name, country);
-        if (!res.ok)
+        Response *res = townTable->insert(name, country);
+        if (res->error)
         {
-            QMessageBox::critical(this, tr("Error"), tr("Can not insert values"));
-            qDebug() << res.errorMessage;
+            //handle error
             return;
         }
         emit modelChanged();
         this->close();
         return;
     }
-    Response res = townTable->updateById(townModel->id, name, country);
+    Response *res = townTable->updateById(townModel->id, name, country);
 
-    if (!res.ok)
+    if (res->error)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Can not apply changes"));
-        qDebug() << res.errorMessage;
+        //handle error
         return;
     }
 
@@ -101,12 +98,11 @@ void EditTownDialog::onApplyPushButtonClicked()
 
 void EditTownDialog::onDeletePushButtonClicked()
 {
-    Response res = townTable->deteleById(townModel->id);
+    Response *res = townTable->deteleById(townModel->id);
 
-    if (!res.ok)
+    if (res->error)
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Can not delete this value."));
-        qDebug() << res.errorMessage;
+        //handle error
         return;
     }
     emit modelChanged();

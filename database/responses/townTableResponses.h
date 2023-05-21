@@ -8,6 +8,7 @@
 struct TownResponse : Response
 {
     TownModel *town;
+    TownResponse(TownModel *town, QSqlError *error);
 };
 
 #endif // TOWNTABLERESPONSES_H

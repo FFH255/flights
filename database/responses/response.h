@@ -8,19 +8,20 @@
 
 struct Response
 {
-    bool ok;
-    QString errorMessage;
+    QSqlError *error;
+    Response(QSqlError *error);
 };
 
 struct QueryResponse : Response
 {
     QSqlQuery *query;
+    QueryResponse(QSqlQuery *query, QSqlError *error);
 };
 
 struct ModelResponse : Response
 {
     QSqlQueryModel *model;
+    ModelResponse(QSqlQueryModel *model, QSqlError *error);
 };
-
 
 #endif // RESPONSE_H

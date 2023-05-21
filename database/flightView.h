@@ -8,8 +8,6 @@ class FlightView : Table
 {
 public:
     FlightView(QObject *parent);
-
-    ModelResponse getModel();
 };
 
 #endif // FLIGHTVIEW_H

@@ -12,11 +12,11 @@ public:
     TownTable(QObject *parent = nullptr);
     ~TownTable();
 
-    ModelResponse getModel();
-    TownResponse selectById(int id);
-    Response updateById(int id, QString town, QString country);
-    Response deteleById(int id);
-    Response insert(QString town, QString country);
+    ModelResponse *getModel();
+    TownResponse *selectById(int id);
+    Response *updateById(int id, QString town, QString country);
+    Response *deteleById(int id);
+    Response *insert(QString town, QString country);
 };
 
 #endif // TOWNTABLE_H

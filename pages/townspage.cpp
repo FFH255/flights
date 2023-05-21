@@ -11,15 +11,14 @@ TownsPage::TownsPage(QWidget *parent) :
 
     townTable = new TownTable(this);
 
-    ModelResponse result = townTable->getModel();
+    ModelResponse *res = townTable->getModel();
 
-    if (!result.ok)
+    if (res->error)
     {
-        qDebug() << result.errorMessage;
-        QMessageBox::critical(this, tr("Something went wrong."), NULL);
+        //handle error
         return;
     }
-    model = result.model;
+    model = res->model;
     this->createUI();
 }
 
@@ -58,16 +57,15 @@ void TownsPage::openAddTownDialog()
 
 void TownsPage::update()
 {
-    ModelResponse result = townTable->getModel();
+    ModelResponse *res = townTable->getModel();
 
-    if (!result.ok)
+    if (res->error)
     {
-        qDebug() << result.errorMessage;
-        QMessageBox::critical(this, tr("Something went wrong."), NULL);
+        //handle error
         return;
     }
 
-    model = result.model;
+    model = res->model;
     ui->townsTableView->setModel(model);
 }
 

@@ -15,7 +15,7 @@ public:
     ~Table();
 
 protected:
-    QueryResponse getQuery();
+    QueryResponse *getQuery();
 };
 
 #endif // TABLE_H

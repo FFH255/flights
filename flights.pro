@@ -12,6 +12,9 @@ SOURCES += \
     database/aircraftTable.cpp \
     database/database.cpp \
     database/flightView.cpp \
+    database/responses/aircraftTableResponses.cpp \
+    database/responses/response.cpp \
+    database/responses/townTableResponses.cpp \
     database/table.cpp \
     database/townTable.cpp \
     dialogs/editAircraftDialog.cpp \

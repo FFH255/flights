@@ -8,6 +8,8 @@
 struct AircraftResponse : Response
 {
     AircraftModel *aircraft;
+    AircraftResponse(AircraftModel *aircraft, QSqlError *error);
 };
+
 
 #endif // AIRCRAFTTABLERESPONSES_H

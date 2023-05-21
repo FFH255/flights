@@ -12,125 +12,116 @@ TownTable::~TownTable()
 
 }
 
-ModelResponse TownTable::getModel()
+ModelResponse *TownTable::getModel()
 {
-    ModelResponse result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return result = {{false, res.errorMessage}, nullptr};
+        return new ModelResponse(nullptr, res->error);
     }
 
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec("SELECT * FROM town;");
 
     if (!ok)
     {
-        return result = {{ok, query->lastError().text()}, nullptr};
+        return new ModelResponse(nullptr, res->error);
     }
 
     QSqlQueryModel *model = new QSqlQueryModel(this->parent);
     model->setQuery(std::move(*query));
-    return result = {{true, ""}, model};
+    return new ModelResponse(model, nullptr);
 }
 
-TownResponse TownTable::selectById(int id)
+TownResponse *TownTable::selectById(int id)
 {
-    TownResponse result;
+    QueryResponse *res = getQuery();
 
-    QueryResponse res = getQuery();
-
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return result = {{false, res.errorMessage}, nullptr};
+        return new TownResponse(nullptr, res->error);
     }
 
-    QSqlQuery *query = res.query;
-
+    QSqlQuery *query = res->query;
     QString queryString = QString("SELECT * FROM town WHERE id = %1;")
                               .arg(id);
-
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return result = {{false, query->lastError().text()}, nullptr};
+        return new TownResponse(nullptr, new QSqlError(query->lastError()));
     }
 
     query->next();
-
     int index = query->value(0).toInt();
     QString name = query->value(1).toString();
     QString country = query->value(2).toString();
     
-    return result = {{true, ""}, new TownModel(index, name, country)};
+    return new TownResponse(new TownModel(index, name, country), nullptr);
 }
 
- Response TownTable::updateById(int id, QString town, QString country)
+ Response *TownTable::updateById(int id, QString town, QString country)
 {
-    Response result;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
     QString queryString = QString("CALL update_town(%1, '%2', '%3');")
                               .arg(id)
                               .arg(town)
                               .arg(country);
-    if (!res.ok) {
+    if (res->error != nullptr) {
         return res;
     }
 
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     if (!query->exec(queryString))
     {
-        return result = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
 
-    return result = {true, ""};
+    return new Response(nullptr);
 }
 
-Response TownTable::deteleById(int id)
+Response *TownTable::deteleById(int id)
 {
-    Response response;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
     QString queryString = QString("CALL delete_town(%1)").arg(id);
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
         return res;
     }
 
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return response = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
 
-    return response = {true, ""};
+    return new Response(nullptr);
 }
 
-Response TownTable::insert(QString town, QString country)
+Response *TownTable::insert(QString town, QString country)
 {
-    Response response;
-    QueryResponse res = getQuery();
+    QueryResponse *res = getQuery();
 
-    if (!res.ok)
+    if (res->error != nullptr)
     {
-        return response = {false, res.errorMessage};
+        return new Response(res->error);
     }
 
     QString queryString = QString("CALL insert_town('%1', '%2');")
                               .arg(town)
                               .arg(country);
-    QSqlQuery *query = res.query;
+    QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 
     if (!ok)
     {
-        return response = {false, query->lastError().text()};
+        return new Response(new QSqlError(query->lastError()));
     }
 
-    return response = {true, ""};
+    return new Response(nullptr);
 }
 

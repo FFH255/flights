@@ -1,5 +1,6 @@
 
 #include "table.h"
+#include "qsqlerror.h"
 
 Table::Table(QObject *parent)
 {
@@ -11,16 +12,15 @@ Table::~Table()
     delete parent;
 }
 
-QueryResponse Table::getQuery()
+QueryResponse *Table::getQuery()
 {
-    QueryResponse res;
     QSqlDatabase database = QSqlDatabase::database();
 
     if (!database.isOpen())
     {
-        return res = {{false, "Database is now opened."}, nullptr};
+        return new QueryResponse(nullptr, new QSqlError(database.lastError()));
     }
     QSqlQuery *query = new QSqlQuery(database);
-    return res = {{true, ""}, query};
+    return new QueryResponse(query, nullptr);
 }
 
