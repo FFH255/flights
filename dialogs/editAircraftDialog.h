@@ -1,0 +1,33 @@
+#ifndef EDITAIRCRAFTDIALOG_H
+#define EDITAIRCRAFTDIALOG_H
+
+#include "database/aircraftTable.h"
+#include <QDialog>
+
+namespace Ui {
+class EditAircraftDialog;
+}
+
+class EditAircraftDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit EditAircraftDialog(QWidget *parent = nullptr, const QModelIndex *index = nullptr);
+    ~EditAircraftDialog();
+
+private:
+    Ui::EditAircraftDialog *ui;
+    AircraftTable *aircraftTable;
+    AircraftModel *originAircraft;
+
+private slots:
+    void onApplyPushButtonClicked();
+    void onDeletePushButtonClicked();
+    void onClosePushButtonClicked();
+
+signals:
+    void modelChanged();
+};
+
+#endif // EDITAIRCRAFTDIALOG_H
