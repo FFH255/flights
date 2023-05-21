@@ -10,12 +10,7 @@ struct AircraftModel
     QString model;
     int seats;
 
-    AircraftModel(int id, QString model, int seats)
-    {
-        this->id = id;
-        this->model = model;
-        this->seats = seats;
-    }
+    AircraftModel(int id, QString model, int seats);
 };
 
 #endif // AIRCRAFTMODEL_H

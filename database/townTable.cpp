@@ -2,7 +2,7 @@
 #include "qsqlerror.h"
 #include "qsqlquery.h"
 
-TownTable::TownTable(QObject *parent) : Table(parent)
+TownTable::TownTable(QObject *parent) : Table("town", parent)
 {
 
 }
@@ -10,28 +10,6 @@ TownTable::TownTable(QObject *parent) : Table(parent)
 TownTable::~TownTable()
 {
 
-}
-
-ModelResponse *TownTable::getModel()
-{
-    QueryResponse *res = getQuery();
-
-    if (res->error != nullptr)
-    {
-        return new ModelResponse(nullptr, res->error);
-    }
-
-    QSqlQuery *query = res->query;
-    bool ok = query->exec("SELECT * FROM town;");
-
-    if (!ok)
-    {
-        return new ModelResponse(nullptr, res->error);
-    }
-
-    QSqlQueryModel *model = new QSqlQueryModel(this->parent);
-    model->setQuery(std::move(*query));
-    return new ModelResponse(model, nullptr);
 }
 
 TownResponse *TownTable::selectById(int id)
@@ -59,6 +37,33 @@ TownResponse *TownTable::selectById(int id)
     QString country = query->value(2).toString();
     
     return new TownResponse(new TownModel(index, name, country), nullptr);
+}
+
+TownsResponse *TownTable::selectAll()
+{
+    QueryResponse *res = getQuery();
+
+    if (res->error)
+    {
+        return new TownsResponse(nullptr, res->error);
+    }
+    QSqlQuery *query = res->query;
+    bool ok = query->exec("SELECT * FROM town;");
+
+    if (!ok)
+    {
+        return new TownsResponse(nullptr, new QSqlError(query->lastError()));
+    }
+    QList<TownModel*> *towns = new QList<TownModel*>;
+
+    while(query->next())
+    {
+        int id = query->value(0).toInt();
+        QString name = query->value(1).toString();
+        QString country = query->value(2).toString();
+        towns->append(new TownModel(id, name, country));
+    }
+    return new TownsResponse(towns, nullptr);
 }
 
  Response *TownTable::updateById(int id, QString town, QString country)

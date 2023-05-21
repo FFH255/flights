@@ -12,12 +12,17 @@ SOURCES += \
     database/aircraftTable.cpp \
     database/database.cpp \
     database/flightView.cpp \
+    database/models/aircraftModel.cpp \
+    database/models/flightModel.cpp \
+    database/models/townModel.cpp \
     database/responses/aircraftTableResponses.cpp \
+    database/responses/flightViewResponses.cpp \
     database/responses/response.cpp \
     database/responses/townTableResponses.cpp \
     database/table.cpp \
     database/townTable.cpp \
     dialogs/editAircraftDialog.cpp \
+    dialogs/editFlightDialog.cpp \
     dialogs/editscheduledialog.cpp \
     dialogs/edittowndialog.cpp \
     dialogs/logindialog.cpp \
@@ -41,11 +46,13 @@ HEADERS += \
     database/models/townModel.h \
     database/responses/aircraftTableResponses.h \
     database/responses/flightViewResponses.h \
+    database/responses/flightViewResponses.h \
     database/responses/response.h \
     database/responses/townTableResponses.h \
     database/table.h \
     database/townTable.h \
     dialogs/editAircraftDialog.h \
+    dialogs/editFlightDialog.h \
     dialogs/editscheduledialog.h \
     dialogs/edittowndialog.h \
     dialogs/logindialog.h \
@@ -63,6 +70,7 @@ HEADERS += \
 
 FORMS += \
     dialogs/editAircraftDialog.ui \
+    dialogs/editFlightDialog.ui \
     dialogs/editscheduledialog.ui \
     dialogs/edittowndialog.ui \
     dialogs/logindialog.ui \

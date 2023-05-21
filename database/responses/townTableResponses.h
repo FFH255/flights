@@ -11,4 +11,10 @@ struct TownResponse : Response
     TownResponse(TownModel *town, QSqlError *error);
 };
 
+struct TownsResponse : Response
+{
+    QList<TownModel*> *towns;
+    TownsResponse(QList<TownModel*> *towns, QSqlError *error);
+};
+
 #endif // TOWNTABLERESPONSES_H

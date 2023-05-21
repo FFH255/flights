@@ -9,13 +9,17 @@ class Table
 {
 protected:
     QObject *parent;
-
-public:
-    Table(QObject *parent = nullptr);
-    ~Table();
+    QString tableName;
 
 protected:
     QueryResponse *getQuery();
+
+public:
+    Table(QString tableName, QObject *parent = nullptr);
+    ~Table();
+
+    ModelResponse *getModel();
+
 };
 
 #endif // TABLE_H

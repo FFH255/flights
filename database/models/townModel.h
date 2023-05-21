@@ -10,11 +10,7 @@ struct TownModel
     QString name;
     QString country;
 
-    TownModel(int id, QString name, QString country) {
-        this->id = id;
-        this->name = name;
-        this->country = country;
-    }
+    TownModel(int id, QString name, QString country);
 };
 
 #endif // TOWNMODEL_H

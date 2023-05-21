@@ -5,15 +5,15 @@
 #include "database/responses/townTableResponses.h"
 #include "database/table.h"
 
-class TownTable : Table
+class TownTable : public Table
 {
 
 public:
     TownTable(QObject *parent = nullptr);
     ~TownTable();
 
-    ModelResponse *getModel();
     TownResponse *selectById(int id);
+    TownsResponse *selectAll();
     Response *updateById(int id, QString town, QString country);
     Response *deteleById(int id);
     Response *insert(QString town, QString country);

@@ -17,8 +17,8 @@ CREATE TABLE flight (
 	from_town_id INT,
 	to_town_id INT,
 	airplane_id INT,
-	ticket_price MONEY NOT NULL
-		CHECK (ticket_price >= 0::money),
+	ticket_price INT NOT NULL
+		CHECK (ticket_price >= 0),
 	reserved_tickets SMALLINT NOT NULL 
 		CHECK (reserved_tickets >= 0),
 	CONSTRAINT fk_from_town_id 

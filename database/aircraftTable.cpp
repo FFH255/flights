@@ -3,31 +3,9 @@
 #include "qsqlerror.h"
 
 AircraftTable::AircraftTable(QObject *parent)
-    : Table{parent}
+    : Table("airplane", parent)
 {
 
-}
-
-ModelResponse *AircraftTable::getModel()
-{
-    QueryResponse *res = getQuery();
-
-    if (res->error != nullptr)
-    {
-        return new ModelResponse(nullptr, res->error);
-    }
-
-    QSqlQuery *query = res->query;
-    bool ok = query->exec("SELECT * FROM airplane");
-
-    if (!ok)
-    {
-        return new ModelResponse(nullptr, new QSqlError(query->lastError()));
-    }
-
-    QSqlQueryModel *model = new QSqlQueryModel(parent);
-    model->setQuery(std::move(*query));
-    return new ModelResponse(model, nullptr);
 }
 
 AircraftResponse *AircraftTable::selectById(int id)
