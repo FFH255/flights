@@ -1,6 +1,6 @@
 #include "townspage.h"
 #include "ui_townspage.h"
-#include <QMessageBox>
+#include "logger.h"
 #include <QSqlTableModel>
 
 TownsPage::TownsPage(QWidget *parent) :
@@ -15,7 +15,7 @@ TownsPage::TownsPage(QWidget *parent) :
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
     model = res->model;
@@ -61,7 +61,7 @@ void TownsPage::update()
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
 

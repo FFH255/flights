@@ -2,7 +2,7 @@
 #include "qabstractitemmodel.h"
 #include "ui_edittowndialog.h"
 #include "utils.h"
-#include <QMessageBox>
+#include "logger.h"
 
 EditTownDialog::EditTownDialog(QWidget *parent, const QModelIndex *index) :
     QDialog(parent),
@@ -40,7 +40,7 @@ void EditTownDialog::setCurrent(int id)
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
 
@@ -56,13 +56,13 @@ void EditTownDialog::onApplyPushButtonClicked()
 
     if (name == "")
     {
-        QMessageBox::information(this, tr("Missing info"), tr("Please enter town's name."));
+        Logger::custom(this, "Please enter town's name", "Town's name is empty string");
         return;
     }
 
     if (country == "")
     {
-        QMessageBox::information(this, tr("Missing info"), tr("Please enter country's name."));
+        Logger::custom(this, "Please enter country's name", "Country's name is empty string");
         return;
     }
 
@@ -71,7 +71,7 @@ void EditTownDialog::onApplyPushButtonClicked()
         Response *res = townTable->insert(name, country);
         if (res->error)
         {
-            //handle error
+            Logger::code(this, *res->error);
             return;
         }
         emit modelChanged();
@@ -82,13 +82,13 @@ void EditTownDialog::onApplyPushButtonClicked()
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
 
     if (townModel->name == name && townModel->country == country)
     {
-        QMessageBox::information(this, tr("Change something."), tr("Some fields are the same."));
+        Logger::custom(this, "Change something before applying");
         return;
     }
 
@@ -102,7 +102,7 @@ void EditTownDialog::onDeletePushButtonClicked()
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
     emit modelChanged();

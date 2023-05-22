@@ -1,6 +1,6 @@
 #include "aircraftPage.h"
 #include "ui_aircraftPage.h"
-#include <QMessageBox>
+#include "logger.h"
 
 AircraftPage::AircraftPage(QWidget *parent) :
     Page("aircrafts", parent),
@@ -12,7 +12,7 @@ AircraftPage::AircraftPage(QWidget *parent) :
     ModelResponse *res = aircraftTable->getModel();
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
 
@@ -52,7 +52,7 @@ void AircraftPage::update()
     ModelResponse *res = aircraftTable->getModel();
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
 

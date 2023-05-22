@@ -1,6 +1,7 @@
 #include "logindialog.h"
+#include "qsqlerror.h"
 #include "ui_logindialog.h"
-#include <QMessageBox>
+#include "logger.h"
 
 LoginDialog::LoginDialog(QWidget *parent) :
     QDialog(parent)
@@ -32,7 +33,7 @@ void LoginDialog::onSubmited()
 
     if (!ok)
     {
-        QMessageBox::critical(this, tr("Error"), tr("Error connecting to database."));
+        Logger::code(this, QSqlDatabase::database().lastError());
     } else
     {
         emit loggedIn();

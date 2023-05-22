@@ -1,5 +1,6 @@
 #include "flightsPage.h"
 #include "ui_flightsPage.h"
+#include "logger.h"
 
 FlightsPage::FlightsPage(QWidget *parent) :
     Page("flights", parent),
@@ -11,7 +12,7 @@ FlightsPage::FlightsPage(QWidget *parent) :
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
     ui->flightsTableView->setModel(res->model);
@@ -48,19 +49,11 @@ void FlightsPage::openAddAircraftDialog()
 
 void FlightsPage::update()
 {
-//    ModelResponse *res = aircraftTable->getModel();
-//    if (res->error)
-//    {
-//        //handle error
-//        return;
-//    }
-
-//    ui->aircraftTableView->setModel(res->model);
     ModelResponse *res = flightView->getModel();
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
     ui->flightsTableView->setModel(res->model);

@@ -2,6 +2,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
+#include "qsqlerror.h"
 #include "qwidget.h"
 
 enum MessageType
@@ -20,6 +21,8 @@ class Logger
 public:
     Logger();
     static void exec(QWidget *parent, MessageType type, QString message, QString debug = "");
+    static void custom(QWidget *parent, QString message, QString debug = "");
+    static void code(QWidget *parent, QSqlError error);
 };
 
 #endif // LOGGER_H

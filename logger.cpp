@@ -7,46 +7,41 @@ Logger::Logger()
 
 }
 
-void Logger::exec(QWidget *parent, MessageType type, QString message, QString debug)
+void Logger::custom(QWidget *parent, QString message, QString debug)
 {
-    QMessageBox messageBox = QMessageBox(parent);
-    QString title;
-
-    switch(type)
-    {
-    case ServerFail:
-        title = QString("Server Fail");
-        messageBox.setIcon(QMessageBox::Warning);
-        break;
-    case ConnectionFail:
-        title = QString("Connection Fail");
-        messageBox.setIcon(QMessageBox::Warning);
-        break;
-    case AuthFail:
-        title = QString("Auth Fail");
-        messageBox.setIcon(QMessageBox::Warning);
-        break;
-    case MissingValue:
-        title = QString("Missing Value");
-        messageBox.setIcon(QMessageBox::Information);
-        break;
-    case BadValue:
-        title = QString("Bad Value");
-        messageBox.setIcon(QMessageBox::Information);
-        break;
-    case SameValue:
-        title = QString("Same Value");
-        messageBox.setIcon(QMessageBox::Information);
-        break;
-    }
-
-    messageBox.setWindowTitle(title);
+    QMessageBox messageBox(parent);
+    messageBox.setIcon(QMessageBox::Information);
     messageBox.setText(message);
     messageBox.exec();
-
-    if (debug != "")
+    if (debug == "")
+    {
+        qDebug() << message;
+    } else
     {
         qDebug() << debug;
     }
+}
+
+void Logger::code(QWidget *parent, QSqlError error)
+{
+    QMessageBox messageBox(parent);
+
+    switch(error.type())
+    {
+
+    case QSqlError::NoError:
+    case QSqlError::ConnectionError:
+        messageBox.setWindowTitle("Connection error");
+        messageBox.setIcon(QMessageBox::Warning);
+        messageBox.setText("Incorrect login or password");
+        break;
+    case QSqlError::StatementError:
+    case QSqlError::TransactionError:
+    case QSqlError::UnknownError:
+        break;
+    }
+
+    qDebug() << "[FROM LOGGER]: " << error.text();
+    messageBox.exec();
 }
 

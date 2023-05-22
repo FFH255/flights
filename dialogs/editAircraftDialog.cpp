@@ -3,6 +3,7 @@
 #include "ui_editAircraftDialog.h"
 #include "utils.h"
 
+#include <error.h>
 #include <logger.h>
 
 EditAircraftDialog::EditAircraftDialog(QWidget *parent, const QModelIndex *index) :
@@ -22,7 +23,7 @@ EditAircraftDialog::EditAircraftDialog(QWidget *parent, const QModelIndex *index
 
         if (res->error)
         {
-            //handle error
+            Logger::code(this, *res->error);
             return;
         }
 
@@ -50,12 +51,12 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
     if(name == "")
     {
-        Logger::exec(this, MessageType::MissingValue, "Please, enter town's name.");
+        Logger::custom(this, "Please, enter towns's");
         return;
     }
     if(seats <= 0)
     {
-        Logger::exec(this, MessageType::BadValue, "Number of seats should be greated then zero.");
+        Logger::custom(this, "Number of seats should be greated then zero.");
         return;
     }
 
@@ -65,7 +66,7 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
         if (res->error)
         {
-            //handle error
+            Logger::code(this, *res->error);
             return;
         }
 
@@ -76,7 +77,7 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
     if (name == originAircraft->model && seats == originAircraft->seats)
     {
-        Logger::exec(this, MessageType::SameValue, "Chage something before applying.");
+        Logger::custom(this, "Chage something before applying.");
         return;
     }
     Response *res = aircraftTable->updateById(originAircraft->id, name, seats);
@@ -96,7 +97,7 @@ void EditAircraftDialog::onDeletePushButtonClicked()
 
     if (res->error)
     {
-        //handle error
+        Logger::code(this, *res->error);
         return;
     }
     emit modelChanged();

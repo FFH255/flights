@@ -2,6 +2,7 @@
 #include "qsqlerror.h"
 #include "ui_editFlightDialog.h"
 #include "utils.h"
+#include "logger.h"
 
 EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
     QDialog(parent),
@@ -13,7 +14,7 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
 
     if (townsResponse->error)
     {
-        //handle error
+        Logger::code(this, *townsResponse->error);
         return;
     }
 
@@ -27,7 +28,7 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
 
     if (modelsResponse->error)
     {
-        //handle error
+        Logger::code(this, *modelsResponse->error);
         qDebug() << modelsResponse->error->text();
         return;
     }
@@ -43,7 +44,7 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
 
     if (flightResponse->error)
     {
-        qDebug() << flightResponse->error->text();
+        Logger::code(this, *flightResponse->error);
         return;
     }
     flightModel = flightResponse->flight;
@@ -82,13 +83,20 @@ void EditFlightDialog::onApplyPushButtonClicked()
         flightModel->airplane == airplane &&
         flightModel->price == price)
     {
+        Logger::custom(this, "Change something before applying");
         return;
     }
+
+    if (from == to)
+    {
+        return;
+    }
+
     Response *res = flightView->update(flightModel->id, date, from, to, airplane, price);
 
     if (res->error)
     {
-        //handle errpr
+        Logger::code(this, *res->error);
         return;
     }
     close();
