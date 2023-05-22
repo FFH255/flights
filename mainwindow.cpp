@@ -3,6 +3,7 @@
 #include "dialogs/logindialog.h"
 #include "pages/aircraftPage.h"
 #include "pages/flightsPage.h"
+#include "pages/schedulePage.h"
 #include "pages/ticketspage.h"
 #include "pages/townspage.h"
 #include "qpushbutton.h"
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     pages.append(new TicketsPage(this));
     pages.append(new TownsPage(this));
     pages.append(new AircraftPage(this));
+    pages.append(new SchedulePage(this));
 
     pageController = new QStackedWidget(this);
 

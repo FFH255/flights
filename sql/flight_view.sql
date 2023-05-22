@@ -125,3 +125,19 @@ BEGIN
 	WHERE id = f_id;
 END;
 $$;
+
+CREATE PROCEDURE insert_flight_view(d date, ft varchar, tt varchar, a varchar, p int)
+LANGUAGE plpgsql AS $$
+BEGIN
+INSERT INTO flight_view(date, "from", "to", airplane, price)
+	VALUES(d, ft, tt, a, p);
+END;
+$$;
+
+CREATE PROCEDURE delete_flight_view(f_id int)
+LANGUAGE plpgsql AS $$
+BEGIN
+DELETE FROM flight_view
+WHERE id = f_id;
+END;
+$$;

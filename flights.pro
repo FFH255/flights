@@ -14,11 +14,13 @@ SOURCES += \
     database/flightView.cpp \
     database/models/aircraftModel.cpp \
     database/models/flightModel.cpp \
+    database/models/scheduleModel.cpp \
     database/models/townModel.cpp \
     database/responses/aircraftTableResponses.cpp \
     database/responses/flightViewResponses.cpp \
     database/responses/response.cpp \
     database/responses/townTableResponses.cpp \
+    database/scheduleView.cpp \
     database/table.cpp \
     database/townTable.cpp \
     dialogs/editAircraftDialog.cpp \
@@ -33,6 +35,7 @@ SOURCES += \
     pages/flightsPage.cpp \
     pages/homepage.cpp \
     pages/page.cpp \
+    pages/schedulePage.cpp \
     pages/ticketspage.cpp \
     pages/townspage.cpp \
     utils.cpp
@@ -43,12 +46,14 @@ HEADERS += \
     database/flightView.h \
     database/models/aircraftModel.h \
     database/models/flightModel.h \
+    database/models/scheduleModel.h \
     database/models/townModel.h \
     database/responses/aircraftTableResponses.h \
     database/responses/flightViewResponses.h \
     database/responses/flightViewResponses.h \
     database/responses/response.h \
     database/responses/townTableResponses.h \
+    database/scheduleView.h \
     database/table.h \
     database/townTable.h \
     dialogs/editAircraftDialog.h \
@@ -64,6 +69,7 @@ HEADERS += \
     pages/flightsPage.h \
     pages/homepage.h \
     pages/page.h \
+    pages/schedulePage.h \
     pages/ticketspage.h \
     pages/townspage.h \
     utils.h
@@ -78,6 +84,7 @@ FORMS += \
     pages/aircraftPage.ui \
     pages/flightsPage.ui \
     pages/homepage.ui \
+    pages/schedulePage.ui \
     pages/ticketspage.ui \
     pages/townspage.ui
 

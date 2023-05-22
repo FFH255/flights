@@ -108,7 +108,7 @@ $$;
 
 --insert, update and delete on flight
 
-CREATE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price money)
+CREATE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	INSERT INTO flight(date, from_town_id, to_town_id, airplane_id, ticket_price, reserved_tickets)
