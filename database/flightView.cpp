@@ -1,4 +1,5 @@
 #include "flightView.h"
+#include "qdatetime.h"
 #include "qsqlerror.h"
 
 FlightView::FlightView(QObject *parent) : Table("flight_view", parent)
@@ -24,7 +25,7 @@ FlightResponse *FlightView::selectById(int id)
     }
     query->next();
     int index = query->value(0).toInt();
-    QDate date = query->value(1).toDate();
+    QString date = query->value(1).toDate().toString("yyyy-MM-dd");
     QString from = query->value(2).toString();
     QString to = query->value(3).toString();
     QString airplane = query->value(4).toString();
@@ -36,7 +37,7 @@ FlightResponse *FlightView::selectById(int id)
     return new FlightResponse(new FlightModel(index, date, from, to, airplane, price, reservedTickets, allTickets, status), nullptr);
 }
 
-Response *FlightView::update(int id, QDate date, QString from, QString to, QString airplane, int price)
+Response *FlightView::update(int id, QString date, QString from, QString to, QString airplane, int price)
 {
     QueryResponse *res = getQuery();
 
@@ -44,14 +45,56 @@ Response *FlightView::update(int id, QDate date, QString from, QString to, QStri
     {
         return new Response(res->error);
     }
-    QString formattedDate = date.toString("yyyy-MM-dd");
     QString queryString = QString("CALL update_flight_view(%1, '%2'::date, '%3', '%4', '%5', %6);")
                               .arg(id)
-                              .arg(formattedDate)
+                              .arg(date)
                               .arg(from)
                               .arg(to)
                               .arg(airplane)
                               .arg(price);
+    QSqlQuery *query = res->query;
+    bool ok = query->exec(queryString);
+
+    if (!ok)
+    {
+        return new Response(new QSqlError(query->lastError()));
+    }
+    return new Response(nullptr);
+}
+
+Response *FlightView::insert(QString date, QString from, QString to, QString airplane, int price)
+{
+    QueryResponse *res = getQuery();
+
+    if (res->error)
+    {
+        return new Response(res->error);
+    }
+    QString queryString = QString("CALL insert_flight_view('%1'::date, '%2', '%3', '%4', %5);")
+                              .arg(date)
+                              .arg(from)
+                              .arg(to)
+                              .arg(airplane)
+                              .arg(price);
+    QSqlQuery *query = res->query;
+    bool ok = query->exec(queryString);
+
+    if (!ok)
+    {
+        return new Response(new QSqlError(query->lastError()));
+    }
+    return new Response(nullptr);
+}
+
+Response *FlightView::deleteById(int id)
+{
+    QueryResponse *res = getQuery();
+
+    if (res->error)
+    {
+        return new Response(res->error);
+    }
+    QString queryString = QString("CALL delete_flight_view(%1)").arg(id);
     QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 

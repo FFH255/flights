@@ -93,7 +93,7 @@ Response *AircraftTable::deteleById(int id)
     return new Response(nullptr);
 }
 
-AvailableModelsResponse *AircraftTable::selectAvailableModels(QDate date)
+AvailableModelsResponse *AircraftTable::selectAvailableModels(QString date)
 {
     QueryResponse *res = getQuery();
 
@@ -101,9 +101,8 @@ AvailableModelsResponse *AircraftTable::selectAvailableModels(QDate date)
     {
         return new AvailableModelsResponse(nullptr, res->error);
     }
-    QString formattedDate = date.toString("yyyy-MM-dd");
-    QString queryString = QString("SELECT * FROM  select_available_airplane_models('%1'::date);")
-                              .arg(formattedDate);
+    QString queryString = QString("SELECT * FROM select_available_airplane_models('%1'::date);")
+                              .arg(date);
     QSqlQuery *query = res->query;
     bool ok = query->exec(queryString);
 

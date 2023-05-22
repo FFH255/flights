@@ -16,3 +16,5 @@ CALL reserve_ticket(2);
 CALL reserve_ticket(3);
 
 SELECT * FROM flight_view;
+
+CALL update_flight_view(1, '2023-05-21', 'Москва', 'Рязань', 'Туполев Ту-134', 500);

@@ -25,10 +25,13 @@ private:
     FlightView *flightView;
     FlightModel *flightModel;
 
+    void setupTownsComboBox();
+
 private slots:
     void onApplyPushButtonClicked();
     void onDeletePushButtonClicked();
     void onClosePushButtonClicked();
+    void setupAirplaneComboBox();
 
 signals:
     void modelChanged();
