@@ -11,5 +11,10 @@ struct AircraftResponse : Response
     AircraftResponse(AircraftModel *aircraft, QSqlError *error);
 };
 
+struct AvailableModelsResponse : Response
+{
+    QList<QString> *models;
+    AvailableModelsResponse(QList<QString> *models, QSqlError *error);
+};
 
 #endif // AIRCRAFTTABLERESPONSES_H

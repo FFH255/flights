@@ -5,3 +5,8 @@ AircraftResponse::AircraftResponse(AircraftModel *aircraft, QSqlError *error) : 
 {
     this->aircraft = aircraft;
 }
+
+AvailableModelsResponse::AvailableModelsResponse(QList<QString> *models, QSqlError *error) : Response(error)
+{
+    this->models = models;
+}

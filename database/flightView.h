@@ -10,6 +10,7 @@ class FlightView : public Table
 public:
     FlightView(QObject *parent);
     FlightResponse *selectById(int id);
+    Response *update(int id, QDate date, QString from, QString to, QString airplane, int price);
 };
 
 #endif // FLIGHTVIEW_H

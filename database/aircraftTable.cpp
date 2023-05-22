@@ -1,5 +1,6 @@
 
 #include "aircraftTable.h"
+#include "qdatetime.h"
 #include "qsqlerror.h"
 
 AircraftTable::AircraftTable(QObject *parent)
@@ -90,5 +91,34 @@ Response *AircraftTable::deteleById(int id)
         return new Response(new QSqlError(query->lastError()));
     }
     return new Response(nullptr);
+}
+
+AvailableModelsResponse *AircraftTable::selectAvailableModels(QDate date)
+{
+    QueryResponse *res = getQuery();
+
+    if (res->error)
+    {
+        return new AvailableModelsResponse(nullptr, res->error);
+    }
+    QString formattedDate = date.toString("yyyy-MM-dd");
+    QString queryString = QString("SELECT * FROM  select_available_airplane_models('%1'::date);")
+                              .arg(formattedDate);
+    QSqlQuery *query = res->query;
+    bool ok = query->exec(queryString);
+
+    if (!ok)
+    {
+        return new AvailableModelsResponse(nullptr, new QSqlError(query->lastError()));
+    }
+    QList<QString> *models = new QList<QString>;
+
+    while(query->next())
+    {
+        QString model = query->value(0).toString();
+        models->append(model);
+    }
+
+    return new AvailableModelsResponse(models, nullptr);
 }
 

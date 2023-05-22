@@ -36,6 +36,41 @@ FlightResponse *FlightView::selectById(int id)
     return new FlightResponse(new FlightModel(index, date, from, to, airplane, price, reservedTickets, allTickets, status), nullptr);
 }
 
+Response *FlightView::update(int id, QDate date, QString from, QString to, QString airplane, int price)
+{
+    QueryResponse *res = getQuery();
+
+    if (res->error)
+    {
+        return new Response(res->error);
+    }
+    QString formattedDate = date.toString("yyyy-MM-dd");
+    QString queryString = QString("CALL update_flight_view(%1, '%2'::date, '%3', '%4', '%5', %6);")
+                              .arg(id)
+                              .arg(formattedDate)
+                              .arg(from)
+                              .arg(to)
+                              .arg(airplane)
+                              .arg(price);
+    QSqlQuery *query = res->query;
+    bool ok = query->exec(queryString);
+
+    if (!ok)
+    {
+        return new Response(new QSqlError(query->lastError()));
+    }
+    return new Response(nullptr);
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -116,3 +116,12 @@ INSTEAD OF DELETE
 ON flight_view
 FOR EACH ROW
 EXECUTE PROCEDURE flight_view_instead_of_delete();
+
+CREATE PROCEDURE update_flight_view(f_id int, d date, ft varchar, tt varchar, a varchar, t_price int)
+LANGUAGE plpgsql AS $$
+BEGIN
+	UPDATE flight_view
+	SET date = d, "from" = ft, "to" = tt, airplane = a, price = t_price
+	WHERE id = f_id;
+END;
+$$;

@@ -16,11 +16,27 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
         //handle error
         return;
     }
+
     for (TownModel* town : *townsResponse->towns)
     {
         ui->fromTownComboBox->addItem(town->name);
         ui->toTownComboBox->addItem(town->name);
     }
+    aircraftTable = new AircraftTable(this);
+    AvailableModelsResponse *modelsResponse = aircraftTable->selectAvailableModels(QDate::currentDate());
+
+    if (modelsResponse->error)
+    {
+        //handle error
+        qDebug() << modelsResponse->error->text();
+        return;
+    }
+
+    for (const QString &model : *modelsResponse->models)
+    {
+        ui->aircraftComboBox->addItem(model);
+    }
+
     flightView = new FlightView(this);
     int id = Utils::getIdByIndex(index);
     FlightResponse *flightResponse = flightView->selectById(id);
@@ -34,8 +50,12 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
     ui->dateEdit->setDate(flightModel->date);
     ui->fromTownComboBox->setCurrentText(flightModel->from);
     ui->toTownComboBox->setCurrentText(flightModel->to);
-    qDebug() << flightModel->price;
+    ui->aircraftComboBox->setCurrentText(flightModel->airplane);
     ui->priceSpinBox->setValue(flightModel->price);
+
+    connect(ui->applyPushButton, &QPushButton::clicked, this, &EditFlightDialog::onApplyPushButtonClicked);
+    connect(ui->deletePushButton, &QPushButton::clicked, this, &EditFlightDialog::onDeletePushButtonClicked);
+    connect(ui->ClosePushButton, &QPushButton::clicked, this, &EditFlightDialog::onClosePushButtonClicked);
 }
 
 EditFlightDialog::~EditFlightDialog()
@@ -44,11 +64,35 @@ EditFlightDialog::~EditFlightDialog()
     delete townTable;
     delete flightView;
     delete flightModel;
+    delete aircraftTable;
 }
 
 void EditFlightDialog::onApplyPushButtonClicked()
 {
+    QDate date = ui->dateEdit->date();
+    QString from = ui->fromTownComboBox->currentText();
+    QString to = ui->toTownComboBox->currentText();
+    QString airplane = ui->aircraftComboBox->currentText();
+    int price = ui->priceSpinBox->value();
+    qDebug() << date << from << to << airplane << price;
 
+    if (flightModel->date == date &&
+        flightModel->from == from &&
+        flightModel->to == to &&
+        flightModel->airplane == airplane &&
+        flightModel->price == price)
+    {
+        return;
+    }
+    Response *res = flightView->update(flightModel->id, date, from, to, airplane, price);
+
+    if (res->error)
+    {
+        //handle errpr
+        return;
+    }
+    close();
+    emit modelChanged();
 }
 
 void EditFlightDialog::onDeletePushButtonClicked()
@@ -58,5 +102,5 @@ void EditFlightDialog::onDeletePushButtonClicked()
 
 void EditFlightDialog::onClosePushButtonClicked()
 {
-
+    close();
 }

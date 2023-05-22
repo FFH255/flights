@@ -15,6 +15,7 @@ public:
     Response *updateById(int id, QString name, int seats);
     Response *insert(QString name, int seats);
     Response *deteleById(int id);
+    AvailableModelsResponse *selectAvailableModels(QDate date);
 };
 
 #endif // AIRCRAFTTABLE_H

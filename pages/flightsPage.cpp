@@ -56,4 +56,12 @@ void FlightsPage::update()
 //    }
 
 //    ui->aircraftTableView->setModel(res->model);
+    ModelResponse *res = flightView->getModel();
+
+    if (res->error)
+    {
+        //handle error
+        return;
+    }
+    ui->flightsTableView->setModel(res->model);
 }
