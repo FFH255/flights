@@ -1,7 +1,6 @@
 #ifndef TOWNSPAGE_H
 #define TOWNSPAGE_H
 
-#include "database/townTable.h"
 #include "dialogs/edittowndialog.h"
 #include "pages/page.h"
 #include <QWidget>
