@@ -1,47 +1,44 @@
 #include "editAircraftDialog.h"
 #include "logger.h"
 #include "ui_editAircraftDialog.h"
-#include "utils.h"
-
 #include <error.h>
 #include <logger.h>
+#include "database/database.h"
 
 EditAircraftDialog::EditAircraftDialog(QWidget *parent, const QModelIndex *index) :
     QDialog(parent),
     ui(new Ui::EditAircraftDialog)
 {
     ui->setupUi(this);
-
-    if (index == nullptr)
-    {
-        originAircraft = nullptr;
-    } else
-    {
-        aircraftTable = new AircraftTable(this);
-        int id = Utils::getIdByIndex(index);
-        AircraftResponse *res = aircraftTable->selectById(id);
-
-        if (res->error)
-        {
-            Logger::code(this, *res->error);
-            return;
-        }
-
-        originAircraft = res->aircraft;
-        ui->nameLineEdit->setText(originAircraft->model);
-        ui->seatsSpinBox->setValue(originAircraft->seats);
-    }
-
+    this->setWindowTitle("Edit");
     connect(ui->applyPushButton, &QPushButton::clicked, this, &EditAircraftDialog::onApplyPushButtonClicked);
     connect(ui->deletePushButton, &QPushButton::clicked, this, &EditAircraftDialog::onDeletePushButtonClicked);
     connect(ui->closePushButton, &QPushButton::clicked, this, &EditAircraftDialog::onClosePushButtonClicked);
+
+    if (!index)
+    {
+        aircraftOrigin = nullptr;
+        ui->deletePushButton->hide();
+        return;
+    }
+    QSqlQueryModel *model = Database::getAircraftByIndex(index);
+
+    if (model->lastError().isValid())
+    {
+        Logger::code(this, model->lastError());
+        return;
+    }
+    aircraftOrigin = new Aircraft(model);
+    ui->nameLineEdit->setText(aircraftOrigin->model);
+    ui->seatsSpinBox->setValue(aircraftOrigin->seats);
+    ui->deletePushButton->show();
 }
 
 EditAircraftDialog::~EditAircraftDialog()
 {
     delete ui;
-    delete aircraftTable;
-    delete originAircraft;
+    delete aircraftOrigin;
+
 }
 
 void EditAircraftDialog::onApplyPushButtonClicked()
@@ -60,31 +57,31 @@ void EditAircraftDialog::onApplyPushButtonClicked()
         return;
     }
 
-    if (originAircraft == nullptr)
+    if (!aircraftOrigin)
     {
-        Response *res = aircraftTable->insert(name, seats);
+        QSqlQueryModel *model = Database::addAircraft(name, seats);
 
-        if (res->error)
+        if (model->lastError().isValid())
         {
-            Logger::code(this, *res->error);
+            Logger::code(this, model->lastError());
             return;
         }
-
         emit modelChanged();
         close();
         return;
     }
 
-    if (name == originAircraft->model && seats == originAircraft->seats)
+    if (name == aircraftOrigin->model && seats == aircraftOrigin->seats)
     {
         Logger::custom(this, "Chage something before applying.");
         return;
     }
-    Response *res = aircraftTable->updateById(originAircraft->id, name, seats);
 
-    if (res->error)
+    QSqlQueryModel *model = Database::updateAircraft(aircraftOrigin->id, name, seats);
+
+    if (model->lastError().isValid())
     {
-        //handle error
+        Logger::code(this, model->lastError());
         return;
     }
     emit modelChanged();
@@ -93,11 +90,11 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
 void EditAircraftDialog::onDeletePushButtonClicked()
 {
-    Response *res = aircraftTable->deteleById(originAircraft->id);
+    QSqlQueryModel *model = Database::removeAircraft(aircraftOrigin->id);
 
-    if (res->error)
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
     emit modelChanged();

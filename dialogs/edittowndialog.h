@@ -1,7 +1,7 @@
 #ifndef EDITTOWNDIALOG_H
 #define EDITTOWNDIALOG_H
 
-#include "database/townTable.h"
+#include "database/models/town.h"
 #include <QDialog>
 #include <QDataWidgetMapper>
 
@@ -15,15 +15,11 @@ class EditTownDialog : public QDialog
 
 private:
     Ui::EditTownDialog *ui;
-    TownTable *townTable;
-    TownModel *townModel;
+    Town *townOrigin;
 
 public:
     explicit EditTownDialog(QWidget *parent = nullptr, const QModelIndex *index = nullptr);
     ~EditTownDialog();
-
-private:
-    void setCurrent(int id);
 
 private slots:
     void onApplyPushButtonClicked();

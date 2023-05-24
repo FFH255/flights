@@ -1,22 +1,20 @@
 #include "flightsPage.h"
 #include "ui_flightsPage.h"
 #include "logger.h"
+#include "database/database.h"
 
 FlightsPage::FlightsPage(QWidget *parent) :
     Page("flights", parent),
     ui(new Ui::FlightsPage)
 {
     ui->setupUi(this);
-    flightView = new FlightView(this);
-    ModelResponse *res = flightView->getModel();
-
-    if (res->error)
+    QSqlQueryModel *model = Database::getAllFlights();
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
-    ui->flightsTableView->setModel(res->model);
-    ui->flightsTableView->setModel(res->model);
+    ui->flightsTableView->setModel(model);
     ui->flightsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->flightsTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->flightsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -29,7 +27,6 @@ FlightsPage::FlightsPage(QWidget *parent) :
 FlightsPage::~FlightsPage()
 {
     delete ui;
-    delete flightView;
     delete editDialog;
 }
 
@@ -49,12 +46,12 @@ void FlightsPage::openAddAircraftDialog()
 
 void FlightsPage::update()
 {
-    ModelResponse *res = flightView->getModel();
+    QSqlQueryModel *model = Database::getAllFlights();
 
-    if (res->error)
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
-    ui->flightsTableView->setModel(res->model);
+    ui->flightsTableView->setModel(model);
 }

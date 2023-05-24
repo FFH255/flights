@@ -12,9 +12,12 @@ SOURCES += \
     database/aircraftTable.cpp \
     database/database.cpp \
     database/flightView.cpp \
+    database/models/aircraft.cpp \
     database/models/aircraftModel.cpp \
+    database/models/flight.cpp \
     database/models/flightModel.cpp \
     database/models/scheduleModel.cpp \
+    database/models/town.cpp \
     database/models/townModel.cpp \
     database/responses/aircraftTableResponses.cpp \
     database/responses/flightViewResponses.cpp \
@@ -44,9 +47,12 @@ HEADERS += \
     database/aircraftTable.h \
     database/database.h \
     database/flightView.h \
+    database/models/aircraft.h \
     database/models/aircraftModel.h \
+    database/models/flight.h \
     database/models/flightModel.h \
     database/models/scheduleModel.h \
+    database/models/town.h \
     database/models/townModel.h \
     database/responses/aircraftTableResponses.h \
     database/responses/flightViewResponses.h \

@@ -1,9 +1,7 @@
 #ifndef EDITFLIGHTDIALOG_H
 #define EDITFLIGHTDIALOG_H
 
-#include "database/aircraftTable.h"
-#include "database/flightView.h"
-#include "database/townTable.h"
+#include "database/models/flight.h"
 #include <QDialog>
 
 namespace Ui {
@@ -20,10 +18,7 @@ public:
 
 private:
     Ui::EditFlightDialog *ui;
-    TownTable *townTable;
-    AircraftTable *aircraftTable;
-    FlightView *flightView;
-    FlightModel *flightModel;
+    Flight *flightOrigin;
 
     void setupTownsComboBox();
 

@@ -1,17 +1,16 @@
 #include "editFlightDialog.h"
 #include "qsqlerror.h"
+#include "qsqlrecord.h"
 #include "ui_editFlightDialog.h"
-#include "utils.h"
 #include "logger.h"
+#include "database/database.h"
 
 EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
     QDialog(parent),
     ui(new Ui::EditFlightDialog)
 {
     ui->setupUi(this);
-    townTable = new TownTable(this);
-    aircraftTable = new AircraftTable(this);
-    flightView = new FlightView(this);
+    this->setWindowTitle("Edit");
 
     setupTownsComboBox();
     setupAirplaneComboBox();
@@ -25,79 +24,68 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
     {
         ui->deletePushButton->hide();
         ui->dateEdit->setDate(QDate::currentDate());
-        flightModel = nullptr;
+        flightOrigin = nullptr;
         return;
     }
 
-    int id = Utils::getIdByIndex(index);
-    FlightResponse *flightResponse = flightView->selectById(id);
-
-    if (flightResponse->error)
+    QSqlQueryModel *model = Database::getFlightByIndex(index);
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *flightResponse->error);
+        Logger::code(this, model->lastError());
         return;
     }
 
-    flightModel = flightResponse->flight;
+    flightOrigin = new Flight(model);
 
     ui->deletePushButton->show();
+    ui->dateEdit->setDate(QDate::fromString(flightOrigin->date, "yyyy-MM-dd"));
+    ui->fromTownComboBox->setCurrentText(flightOrigin->from);
+    ui->toTownComboBox->setCurrentText(flightOrigin->to);
 
-    ui->dateEdit->setDate(QDate::fromString(flightModel->date, "yyyy-MM-dd"));
-    ui->fromTownComboBox->setCurrentText(flightModel->from);
-    ui->toTownComboBox->setCurrentText(flightModel->to);
-
-    int i = ui->aircraftComboBox->findText(flightModel->airplane);
+    int i = ui->aircraftComboBox->findText(flightOrigin->airplane);
     if (i == -1)
     {
-        ui->aircraftComboBox->addItem(flightModel->airplane);
+        ui->aircraftComboBox->addItem(flightOrigin->airplane);
     }
-    ui->aircraftComboBox->setCurrentText(flightModel->airplane);
-
-    ui->priceSpinBox->setValue(flightModel->price);
+    ui->aircraftComboBox->setCurrentText(flightOrigin->airplane);
+    ui->priceSpinBox->setValue(flightOrigin->price);
 }
 
 EditFlightDialog::~EditFlightDialog()
 {
     delete ui;
-    delete townTable;
-    delete flightView;
-    delete flightModel;
-    delete aircraftTable;
+    delete flightOrigin;
 }
 
 void EditFlightDialog::setupAirplaneComboBox()
 {
     ui->aircraftComboBox->clear();
     QString date = ui->dateEdit->date().toString("yyyy-MM-dd");
-    AvailableModelsResponse *modelsResponse = aircraftTable->selectAvailableModels(date);
-
-    if (modelsResponse->error)
+    QSqlQueryModel *model = Database::getAvailableModels(date);
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *modelsResponse->error);
-        qDebug() << modelsResponse->error->text();
+        Logger::code(this, model->lastError());
         return;
     }
-
-    for (const QString &model : *modelsResponse->models)
-    {
-        ui->aircraftComboBox->addItem(model);
-    }
+    ui->aircraftComboBox->setModel(model);
 }
 
 void EditFlightDialog::setupTownsComboBox()
 {
-    TownsResponse *townsResponse = townTable->selectAll();
+    QSqlQueryModel *model = Database::getAllTowns();
 
-    if (townsResponse->error)
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *townsResponse->error);
+        Logger::code(this, model->lastError());
         return;
     }
 
-    for (TownModel* town : *townsResponse->towns)
+    for(int i = 0; i < model->rowCount(); i++)
     {
-        ui->fromTownComboBox->addItem(town->name);
-        ui->toTownComboBox->addItem(town->name);
+        QString name = model->record(i).value("name").toString();
+        ui->fromTownComboBox->addItem(name);
+        ui->toTownComboBox->addItem(name);
+
     }
 }
 
@@ -115,13 +103,13 @@ void EditFlightDialog::onApplyPushButtonClicked()
         return;
     }
 
-    if (!flightModel)
+    if (!flightOrigin)
     {
-        Response *res = flightView->insert(date, from, to, airplane, price);
+        QSqlQueryModel *model = Database::addFlight(date, from, to, airplane, price);
 
-        if (res->error)
+        if (model->lastError().isValid())
         {
-            Logger::code(this, *res->error);
+            Logger::code(this, model->lastError());
             return;
         }
         emit modelChanged();
@@ -129,21 +117,20 @@ void EditFlightDialog::onApplyPushButtonClicked()
         return;
     }
 
-    if (flightModel->date == date &&
-        flightModel->from == from &&
-        flightModel->to == to &&
-        flightModel->airplane == airplane &&
-        flightModel->price == price)
+    if (flightOrigin->date == date &&
+        flightOrigin->from == from &&
+        flightOrigin->to == to &&
+        flightOrigin->airplane == airplane &&
+        flightOrigin->price == price)
     {
         Logger::custom(this, "Change something before applying");
         return;
     }
 
-    Response *res = flightView->update(flightModel->id, date, from, to, airplane, price);
-
-    if (res->error)
+    QSqlQueryModel *model = Database::updateFlight(flightOrigin->id, date, from, to, airplane, price);
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
     close();
@@ -152,11 +139,10 @@ void EditFlightDialog::onApplyPushButtonClicked()
 
 void EditFlightDialog::onDeletePushButtonClicked()
 {
-    Response *res = flightView->deleteById(flightModel->id);
-
-    if (res->error)
+    QSqlQueryModel *model = Database::removeFlight(flightOrigin->id);
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
     emit modelChanged();

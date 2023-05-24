@@ -1,52 +1,45 @@
 #include "edittowndialog.h"
 #include "qabstractitemmodel.h"
 #include "ui_edittowndialog.h"
-#include "utils.h"
 #include "logger.h"
+#include <QSqlField>
+#include "database/database.h"
 
 EditTownDialog::EditTownDialog(QWidget *parent, const QModelIndex *index) :
     QDialog(parent),
     ui(new Ui::EditTownDialog)
 {
     ui->setupUi(this);
-
-    townTable = new TownTable(this);
+    this->setWindowTitle("Edit");
 
     connect(ui->applyPushButton, &QPushButton::clicked, this, &EditTownDialog::onApplyPushButtonClicked);
     connect(ui->deletePushButton, &QPushButton::clicked, this, &EditTownDialog::onDeletePushButtonClicked);
     connect(ui->closePushButton, &QPushButton::clicked, this, &EditTownDialog::onClosePushButtonClicked);
 
-    if (index == nullptr)
+    if (!index)
     {
         ui->deletePushButton->hide();
-        townModel = nullptr;
-    } else
-    {
-        int id = Utils::getIdByIndex(index);
-        setCurrent(id);
+        townOrigin = nullptr;
+        return;
     }
+    QSqlQueryModel *model = Database::getTownByIndex(index);
+
+    if (model->lastError().isValid())
+    {
+        Logger::code(this, model->lastError());
+        return;
+    }
+    this->townOrigin = new Town(model);
+    ui->deletePushButton->show();
+
+    ui->townLineEdit->setText(townOrigin->name);
+    ui->countryLineEdit->setText(townOrigin->country);
 }
 
 EditTownDialog::~EditTownDialog()
 {
     delete ui;
-    delete townTable;
-    delete townModel;
-}
-
-void EditTownDialog::setCurrent(int id)
-{
-    TownResponse *res = townTable->selectById(id);
-
-    if (res->error)
-    {
-        Logger::code(this, *res->error);
-        return;
-    }
-
-    townModel = res->town;
-    ui->townLineEdit->setText(townModel->name);
-    ui->countryLineEdit->setText(townModel->country);
+    delete townOrigin;
 }
 
 void EditTownDialog::onApplyPushButtonClicked()
@@ -66,29 +59,31 @@ void EditTownDialog::onApplyPushButtonClicked()
         return;
     }
 
-    if (townModel == nullptr)
+    if (!townOrigin)
     {
-        Response *res = townTable->insert(name, country);
-        if (res->error)
+        QSqlQueryModel *model = Database::addTown(name, country);
+
+        if (model->lastError().isValid())
         {
-            Logger::code(this, *res->error);
+            Logger::code(this, model->lastError());
             return;
         }
+
         emit modelChanged();
         this->close();
         return;
     }
-    Response *res = townTable->updateById(townModel->id, name, country);
 
-    if (res->error)
-    {
-        Logger::code(this, *res->error);
-        return;
-    }
-
-    if (townModel->name == name && townModel->country == country)
+    if (townOrigin->name == name && townOrigin->country == country)
     {
         Logger::custom(this, "Change something before applying");
+        return;
+    }
+    QSqlQueryModel *model = Database::updateTown(townOrigin->id, name, country);
+
+    if (model->lastError().isValid())
+    {
+        Logger::code(this, model->lastError());
         return;
     }
 
@@ -98,11 +93,11 @@ void EditTownDialog::onApplyPushButtonClicked()
 
 void EditTownDialog::onDeletePushButtonClicked()
 {
-    Response *res = townTable->deteleById(townModel->id);
+    QSqlQueryModel *model = Database::removeTown(townOrigin->id);
 
-    if (res->error)
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
     emit modelChanged();

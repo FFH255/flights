@@ -18,7 +18,6 @@ private:
     Ui::TownsPage *ui;
 
     QSqlQueryModel *model;
-    TownTable *townTable;
     EditTownDialog *editDialog;
 
 public:

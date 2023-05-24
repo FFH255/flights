@@ -1,7 +1,7 @@
 #ifndef EDITAIRCRAFTDIALOG_H
 #define EDITAIRCRAFTDIALOG_H
 
-#include "database/aircraftTable.h"
+#include "database/models/aircraft.h"
 #include <QDialog>
 
 namespace Ui {
@@ -18,8 +18,7 @@ public:
 
 private:
     Ui::EditAircraftDialog *ui;
-    AircraftTable *aircraftTable;
-    AircraftModel *originAircraft;
+    Aircraft *aircraftOrigin;
 
 private slots:
     void onApplyPushButtonClicked();

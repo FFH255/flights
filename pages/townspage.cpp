@@ -2,37 +2,34 @@
 #include "ui_townspage.h"
 #include "logger.h"
 #include <QSqlTableModel>
+#include "database/database.h"
 
 TownsPage::TownsPage(QWidget *parent) :
     Page("towns", parent),
     ui(new Ui::TownsPage)
 {
     ui->setupUi(this);
-
-    townTable = new TownTable(this);
-
-    ModelResponse *res = townTable->getModel();
-
-    if (res->error)
+    QSqlQueryModel *model = Database::getAllTowns();
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
-    model = res->model;
+    this->model = model;
     this->createUI();
 }
 
 TownsPage::~TownsPage()
 {
     delete ui;
-    delete townTable;
     delete model;
 }
 
 void TownsPage::createUI()
 {
     ui->townsTableView->setModel(model);
-    ui->townsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->townsTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    ui->townsTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
     ui->townsTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->townsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->townsTableView->hideColumn(0);
@@ -57,15 +54,13 @@ void TownsPage::openAddTownDialog()
 
 void TownsPage::update()
 {
-    ModelResponse *res = townTable->getModel();
-
-    if (res->error)
+    QSqlQueryModel *model = Database::getAllTowns();
+    if (model->lastError().isValid())
     {
-        Logger::code(this, *res->error);
+        Logger::code(this, model->lastError());
         return;
     }
-
-    model = res->model;
+    this->model = model;
     ui->townsTableView->setModel(model);
 }
 
