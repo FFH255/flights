@@ -19,10 +19,10 @@ public:
 private:
     Ui::SchedulePage *ui;
     QSqlQueryModel *model;
+    QStringList headers;
     void setupTownComboBoxes();
 
 private slots:
-    void openAddAircraftDialog();
     void searchSchedule();
     void setupSchedule();
     void reserveTicket(const QModelIndex &index);

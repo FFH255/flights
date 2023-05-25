@@ -245,4 +245,3 @@ QSqlQueryModel *Database::refundTicketByIndex(const QModelIndex *index)
     int id = getIdByIndex(index);
     return refundTicketByID(id);
 }
-

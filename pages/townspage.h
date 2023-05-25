@@ -21,11 +21,8 @@ private:
     EditTownDialog *editDialog;
 
 public:
-    explicit TownsPage(QWidget *parent = nullptr);
+    TownsPage(QWidget *parent = nullptr);
     ~TownsPage();
-
-private:
-    void createUI();
 
 private slots:
     void openEditTownDialog(const QModelIndex &index);

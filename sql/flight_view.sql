@@ -128,6 +128,14 @@ LANGUAGE SQL AS $$
 	ORDER BY (date);
 $$;
 
+CREATE OR REPLACE FUNCTION select_flight_view_by_id(f_id int)
+RETURNS SETOF flight_view
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM flight_view
+	WHERE id = f_id;
+$$;
+
 -- update 
 
 CREATE PROCEDURE update_flight_view(f_id int, d date, ft varchar, tt varchar, a varchar, t_price int)

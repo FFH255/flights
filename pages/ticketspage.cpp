@@ -12,7 +12,18 @@ TicketsPage::TicketsPage(QWidget *parent) :
 {
     ui->setupUi(this);
     headers = {"Дата вылета", "Откуда", "Куда", "Цена", "Дата бронирования"};
-    update();
+
+    QSqlQueryModel *model = Database::getAllTickets();
+
+    if (model->lastError().isValid())
+    {
+        Logger::code(this, model->lastError());
+        return;
+    }
+    this->model = model;
+    ui->ticketsTableView->setModel(model);
+    setupTable(ui->ticketsTableView, model, headers);
+
     connect(ui->ticketsTableView, &QTableView::doubleClicked, this, &TicketsPage::refundTicket);
     connect(ui->updatePushButton, &QPushButton::clicked, this, &TicketsPage::update);
 }
@@ -25,13 +36,14 @@ TicketsPage::~TicketsPage()
 
 void TicketsPage::update()
 {
-    model = Database::getAllTickets();
+    QSqlQueryModel *model = Database::getAllTickets();
 
     if (model->lastError().isValid())
     {
         Logger::code(this, model->lastError());
         return;
     }
+    this->model = model;
     setupTable(ui->ticketsTableView, model, headers);
     ui->ticketsTableView->setModel(model);
 }

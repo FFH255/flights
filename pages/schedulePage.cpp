@@ -16,7 +16,7 @@ SchedulePage::SchedulePage(QWidget *parent) :
     ui->dateEdit->setDate(QDate::currentDate());
 
     setupSchedule();
-    QStringList headers = {"Дата", "Откуда", "Куда"};
+    headers = {"Дата рейса", "Откуда", "Куда", "Цена билета"};
     setupTable(ui->scheduleTableView, model, headers);
 
     connect(ui->searchPushButton, &QPushButton::clicked, this, &SchedulePage::searchSchedule);
@@ -62,6 +62,7 @@ void SchedulePage::searchSchedule()
         return;
     }
     ui->scheduleTableView->setModel(model);
+    setupTable(ui->scheduleTableView, model, headers);
 }
 
 void SchedulePage::setupSchedule()
@@ -74,6 +75,7 @@ void SchedulePage::setupSchedule()
         return;
     }
     ui->scheduleTableView->setModel(model);
+    setupTable(ui->scheduleTableView, model, headers);
 }
 
 void SchedulePage::reserveTicket(const QModelIndex &index)

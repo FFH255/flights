@@ -18,23 +18,18 @@ TownsPage::TownsPage(QWidget *parent) :
         return;
     }
     this->model = model;
-    this->createUI();
-}
-
-TownsPage::~TownsPage()
-{
-    delete ui;
-    delete model;
-}
-
-void TownsPage::createUI()
-{
     ui->townsTableView->setModel(model);
     setupTable(ui->townsTableView, model, headers);
 
     connect(ui->townsTableView, &QTableView::doubleClicked, this, &TownsPage::openEditTownDialog);
     connect(ui->addNewTownPushButton, &QPushButton::clicked, this, &TownsPage::openAddTownDialog);
     connect(ui->updatePushButton, &QPushButton::clicked, this, &TownsPage::update);
+}
+
+TownsPage::~TownsPage()
+{
+    delete ui;
+    delete model;
 }
 
 void TownsPage::openEditTownDialog(const QModelIndex &index)

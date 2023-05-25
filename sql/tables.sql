@@ -61,6 +61,14 @@ LANGUAGE SQL AS $$
 	ORDER BY (name);
 $$;
 
+CREATE OR REPLACE FUNCTION select_town_by_id(t_id int)
+RETURNS SETOF town
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM town
+	WHERE id = t_id;
+$$;
+
 CREATE PROCEDURE insert_town(n varchar(255), c varchar(128))
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -98,6 +106,14 @@ LANGUAGE SQL AS $$
 	ORDER BY (model);
 $$;
 
+CREATE OR REPLACE FUNCTION select_airplane_by_id(a_id int)
+RETURNS SETOF airplane
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM airplane
+	WHERE id = a_id;
+$$;
+
 CREATE PROCEDURE insert_airplane(m varchar(32), s SMALLINT)
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -133,6 +149,14 @@ LANGUAGE SQL AS $$
 	FROM flight
 	WHERE id != 0
 	ORDER BY (date);
+$$;
+
+CREATE OR REPLACE FUNCTION select_flight_by_id(f_id int)
+RETURNS SETOF flight
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM flight
+	WHERE id = f_id;
 $$;
 
 CREATE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price int)
@@ -182,6 +206,14 @@ LANGUAGE SQL AS $$
 	FROM ticket
 	WHERE id != 0
 	ORDER BY (booking_date);
+$$;
+
+CREATE OR REPLACE FUNCTION select_ticket_by_id(t_id int)
+RETURNS SETOF ticket
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM ticket
+	WHERE id = t_id;
 $$;
 
 CREATE PROCEDURE insert_ticket(f_id int)

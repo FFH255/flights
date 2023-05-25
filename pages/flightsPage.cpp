@@ -8,14 +8,16 @@ FlightsPage::FlightsPage(QWidget *parent) :
     ui(new Ui::FlightsPage)
 {
     ui->setupUi(this);
+    headers = {"Дата", "Откуда", "Куда", "Самолет", "Цена билета", "Кол-во броней", "Всево билетов", "Статус"};
+
     QSqlQueryModel *model = Database::getAllFlights();
+
     if (model->lastError().isValid())
     {
         Logger::code(this, model->lastError());
         return;
     }
     ui->flightsTableView->setModel(model);
-    headers = {"Дата", "Откуда", "Куда", "Самолет", "Цена билета", "Кол-во броней", "Всево билетов", "Статус"};
     setupTable(ui->flightsTableView, model, headers);
 
     connect(ui->flightsTableView, &QTableView::doubleClicked, this, &FlightsPage::openEditAircraftDialog);
