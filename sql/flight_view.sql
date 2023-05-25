@@ -7,17 +7,17 @@ CREATE OR REPLACE VIEW flight_view(id, date, "from", "to", airplane, price, rese
 		f.ticket_price,
 		f.reserved_tickets,
 		a.seats,
-		CASE WHEN CURRENT_DATE = f.date THEN 'running'
-			 WHEN CURRENT_DATE < f.date THEN 'pending'
-		 	 WHEN CURRENT_DATE > f.date THEN 'completed' END
+		CASE WHEN CURRENT_DATE = f.date THEN 'занят'
+			 WHEN CURRENT_DATE < f.date THEN 'ожидает'
+		 	 WHEN CURRENT_DATE > f.date THEN 'завершен' END
 	FROM flight f
 	INNER JOIN town tf
 	ON f.from_town_id = tf.id
 	INNER JOIN town tt
 	ON f.to_town_id = tt.id
 	INNER JOIN airplane a
-	ON f.airplane_id = a.id)
-	ORDER BY (f.date) ASC;
+	ON f.airplane_id = a.id
+	ORDER BY (f.date) ASC);
 	
 -- instead of insert on flight_view
 
@@ -117,6 +117,19 @@ ON flight_view
 FOR EACH ROW
 EXECUTE PROCEDURE flight_view_instead_of_delete();
 
+--select
+
+CREATE OR REPLACE FUNCTION select_flight_view()
+RETURNS SETOF flight_view
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM flight_view
+	WHERE id != 0
+	ORDER BY (date);
+$$;
+
+-- update 
+
 CREATE PROCEDURE update_flight_view(f_id int, d date, ft varchar, tt varchar, a varchar, t_price int)
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -126,6 +139,8 @@ BEGIN
 END;
 $$;
 
+--inseft
+
 CREATE PROCEDURE insert_flight_view(d date, ft varchar, tt varchar, a varchar, p int)
 LANGUAGE plpgsql AS $$
 BEGIN
@@ -133,6 +148,8 @@ INSERT INTO flight_view(date, "from", "to", airplane, price)
 	VALUES(d, ft, tt, a, p);
 END;
 $$;
+
+--delete
 
 CREATE PROCEDURE delete_flight_view(f_id int)
 LANGUAGE plpgsql AS $$

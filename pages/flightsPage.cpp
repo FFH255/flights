@@ -4,7 +4,7 @@
 #include "database/database.h"
 
 FlightsPage::FlightsPage(QWidget *parent) :
-    Page("flights", parent),
+    Page("рейсы", parent),
     ui(new Ui::FlightsPage)
 {
     ui->setupUi(this);
@@ -15,13 +15,12 @@ FlightsPage::FlightsPage(QWidget *parent) :
         return;
     }
     ui->flightsTableView->setModel(model);
-    ui->flightsTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    ui->flightsTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->flightsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->flightsTableView->hideColumn(0);
+    headers = {"Дата", "Откуда", "Куда", "Самолет", "Цена билета", "Кол-во броней", "Всево билетов", "Статус"};
+    setupTable(ui->flightsTableView, model, headers);
 
     connect(ui->flightsTableView, &QTableView::doubleClicked, this, &FlightsPage::openEditAircraftDialog);
     connect(ui->addPushButton, &QPushButton::clicked, this, &FlightsPage::openAddAircraftDialog);
+    connect(ui->updatePushButton, &QPushButton::clicked, this, &FlightsPage::update);
 }
 
 FlightsPage::~FlightsPage()
@@ -53,5 +52,6 @@ void FlightsPage::update()
         Logger::code(this, model->lastError());
         return;
     }
+    setupTable(ui->flightsTableView, model, headers);
     ui->flightsTableView->setModel(model);
 }

@@ -47,7 +47,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Date</string>
+          <string>дата</string>
          </property>
         </widget>
        </item>
@@ -61,7 +61,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>departure town</string>
+          <string>откуда</string>
          </property>
         </widget>
        </item>
@@ -75,7 +75,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>arrival town</string>
+          <string>куда</string>
          </property>
         </widget>
        </item>
@@ -89,7 +89,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>airplane</string>
+          <string>самолет</string>
          </property>
         </widget>
        </item>
@@ -103,7 +103,7 @@
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>price</string>
+          <string>цена</string>
          </property>
         </widget>
        </item>
@@ -117,14 +117,14 @@
        <item>
         <widget class="QPushButton" name="pushButton_apply">
          <property name="text">
-          <string>Apply</string>
+          <string>сохранить</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_close">
          <property name="text">
-          <string>Close</string>
+          <string>отменить</string>
          </property>
         </widget>
        </item>

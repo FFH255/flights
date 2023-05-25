@@ -1,7 +1,6 @@
 #ifndef AIRCRAFTPAGE_H
 #define AIRCRAFTPAGE_H
 
-#include "database/models/aircraft.h"
 #include "dialogs/editAircraftDialog.h"
 #include "pages/page.h"
 #include <QWidget>
@@ -20,6 +19,7 @@ public:
 
 private:
     Ui::AircraftPage *ui;
+    QStringList headers;
     EditAircraftDialog *editDialog;
 
 private slots:

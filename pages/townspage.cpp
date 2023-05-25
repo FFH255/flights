@@ -2,13 +2,15 @@
 #include "ui_townspage.h"
 #include "logger.h"
 #include <QSqlTableModel>
+#include <qheaderview.h>
 #include "database/database.h"
 
 TownsPage::TownsPage(QWidget *parent) :
-    Page("towns", parent),
+    Page("города", parent),
     ui(new Ui::TownsPage)
 {
     ui->setupUi(this);
+    headers = {"Название", "Страна"};
     QSqlQueryModel *model = Database::getAllTowns();
     if (model->lastError().isValid())
     {
@@ -28,14 +30,11 @@ TownsPage::~TownsPage()
 void TownsPage::createUI()
 {
     ui->townsTableView->setModel(model);
-    ui->townsTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
-    ui->townsTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::Stretch);
-    ui->townsTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->townsTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->townsTableView->hideColumn(0);
+    setupTable(ui->townsTableView, model, headers);
 
     connect(ui->townsTableView, &QTableView::doubleClicked, this, &TownsPage::openEditTownDialog);
     connect(ui->addNewTownPushButton, &QPushButton::clicked, this, &TownsPage::openAddTownDialog);
+    connect(ui->updatePushButton, &QPushButton::clicked, this, &TownsPage::update);
 }
 
 void TownsPage::openEditTownDialog(const QModelIndex &index)
@@ -60,6 +59,7 @@ void TownsPage::update()
         Logger::code(this, model->lastError());
         return;
     }
+    setupTable(ui->townsTableView, model, headers);
     this->model = model;
     ui->townsTableView->setModel(model);
 }

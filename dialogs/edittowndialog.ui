@@ -21,7 +21,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>town</string>
+          <string>город</string>
          </property>
         </widget>
        </item>
@@ -35,7 +35,7 @@
        <item>
         <widget class="QLabel" name="label_country">
          <property name="text">
-          <string>country</string>
+          <string>страна</string>
          </property>
         </widget>
        </item>
@@ -60,21 +60,21 @@
          <item>
           <widget class="QPushButton" name="applyPushButton">
            <property name="text">
-            <string>apply</string>
+            <string>сохранить</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="deletePushButton">
            <property name="text">
-            <string>delete</string>
+            <string>удалить</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="closePushButton">
            <property name="text">
-            <string>close</string>
+            <string>отменить</string>
            </property>
           </widget>
          </item>

@@ -14,9 +14,9 @@ CREATE TABLE airplane (
 CREATE TABLE flight (
 	id SERIAL PRIMARY KEY,
 	date DATE NOT NULL,
-	from_town_id INT,
-	to_town_id INT,
-	airplane_id INT,
+	from_town_id INT NOT NULL DEFAULT 0,
+	to_town_id INT NOT NULL DEFAULT 0,
+	airplane_id INT NOT NULL DEFAULT 0,
 	ticket_price INT NOT NULL
 		CHECK (ticket_price >= 0),
 	reserved_tickets SMALLINT NOT NULL 
@@ -24,25 +24,25 @@ CREATE TABLE flight (
 	CONSTRAINT fk_from_town_id 
 		FOREIGN KEY (from_town_id)
 		REFERENCES town(id)
-		ON DELETE SET NULL,
+		ON DELETE SET DEFAULT,
 	CONSTRAINT fk_to_town_id
 		FOREIGN KEY (to_town_id)
 		REFERENCES town(id)
-		ON DELETE SET NULL,
+		ON DELETE SET DEFAULT,
 	CONSTRAINT fk_airplane_id
 		FOREIGN KEY (airplane_id)
 		REFERENCES airplane(id)
-		ON DELETE SET NULL
+		ON DELETE SET DEFAULT
 );
 
 CREATE TABLE ticket (
 	id SERIAL PRIMARY KEY,
-	flight_id INT,
+	flight_id INT NOT NULL DEFAULT 0,
 	booking_date DATE NOT NULL,
 	CONSTRAINT fk_flight_id
 		FOREIGN KEY (flight_id)
 		REFERENCES flight(id)
-		ON DELETE SET NULL
+		ON DELETE SET DEFAULT
 );
 
 DROP TABLE ticket CASCADE;
@@ -50,7 +50,16 @@ DROP TABLE flight CASCADE;
 DROP TABLE town CASCADE;
 DROP TABLE airplane CASCADE;
 
--- insert, update and delete on town
+--TOWN
+
+CREATE OR REPLACE FUNCTION select_towns()
+RETURNS SETOF town
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM town
+	WHERE id != 0
+	ORDER BY (name);
+$$;
 
 CREATE PROCEDURE insert_town(n varchar(255), c varchar(128))
 LANGUAGE plpgsql AS $$
@@ -78,7 +87,16 @@ BEGIN
 END;
 $$;
 
---insert, update and delete on airplane
+--AIRPLANE
+
+CREATE OR REPLACE FUNCTION select_airplanes()
+RETURNS SETOF airplane
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM airplane
+	WHERE id != 0
+	ORDER BY (model);
+$$;
 
 CREATE PROCEDURE insert_airplane(m varchar(32), s SMALLINT)
 LANGUAGE plpgsql AS $$
@@ -106,7 +124,16 @@ BEGIN
 END;
 $$;
 
---insert, update and delete on flight
+--FLIGHT
+
+CREATE OR REPLACE FUNCTION select_flights()
+RETURNS SETOF flight
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM flight
+	WHERE id != 0
+	ORDER BY (date);
+$$;
 
 CREATE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price int)
 LANGUAGE plpgsql AS $$
@@ -146,7 +173,16 @@ BEGIN
 END;
 $$;
 
---insert, update and delete on ticket
+--TICKET
+
+CREATE OR REPLACE FUNCTION select_tickets()
+RETURNS SETOF ticket
+LANGUAGE SQL AS $$
+	SELECT * 
+	FROM ticket
+	WHERE id != 0
+	ORDER BY (booking_date);
+$$;
 
 CREATE PROCEDURE insert_ticket(f_id int)
 LANGUAGE plpgsql AS $$

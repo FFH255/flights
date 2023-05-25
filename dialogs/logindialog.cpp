@@ -9,7 +9,7 @@ LoginDialog::LoginDialog(QWidget *parent) :
     , ui(new Ui::LoginDialog)
 {
     ui->setupUi(this);
-
+    this->setWindowTitle("Вход");
     connect(ui->pushButton_submit, &QPushButton::clicked, this, &LoginDialog::onSubmited);
 }
 

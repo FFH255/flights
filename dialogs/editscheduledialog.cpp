@@ -6,7 +6,7 @@ EditScheduleDialog::EditScheduleDialog(QWidget *parent) :
     ui(new Ui::EditScheduleDialog)
 {
     ui->setupUi(this);
-
+    this->setWindowTitle("Редактирование");
     mapper = new QDataWidgetMapper(this);
 }
 

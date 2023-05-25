@@ -10,7 +10,7 @@ EditFlightDialog::EditFlightDialog(QWidget *parent, const QModelIndex *index) :
     ui(new Ui::EditFlightDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Edit");
+    this->setWindowTitle("Редактирование");
 
     setupTownsComboBox();
     setupAirplaneComboBox();

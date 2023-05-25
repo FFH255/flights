@@ -47,7 +47,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>name</string>
+          <string>название</string>
          </property>
         </widget>
        </item>
@@ -61,7 +61,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>seats</string>
+          <string>количество мест</string>
          </property>
         </widget>
        </item>
@@ -96,21 +96,21 @@
        <item>
         <widget class="QPushButton" name="applyPushButton">
          <property name="text">
-          <string>Apply</string>
+          <string>сохранить</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="deletePushButton">
          <property name="text">
-          <string>Delete</string>
+          <string>удалить</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="closePushButton">
          <property name="text">
-          <string>Close</string>
+          <string>отменить</string>
          </property>
         </widget>
        </item>

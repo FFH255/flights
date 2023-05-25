@@ -20,7 +20,7 @@
    <item row="0" column="3">
     <widget class="QPushButton" name="searchPushButton">
      <property name="text">
-      <string>search</string>
+      <string>поиск</string>
      </property>
     </widget>
    </item>
@@ -36,7 +36,7 @@
    <item row="0" column="4">
     <widget class="QPushButton" name="allPushButton">
      <property name="text">
-      <string>all</string>
+      <string>все</string>
      </property>
     </widget>
    </item>

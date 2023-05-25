@@ -17,6 +17,7 @@ private:
     Ui::TownsPage *ui;
 
     QSqlQueryModel *model;
+    QStringList headers;
     EditTownDialog *editDialog;
 
 public:

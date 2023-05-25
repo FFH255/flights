@@ -13,6 +13,10 @@ AS (SELECT f.id, f.date, ft.name as "from", tt.name AS "to" -- Корреляц�
 					HAVING t.flight_id = f.id), 0)) < a.seats
 	AND f.date >= CURRENT_DATE);
 	
+
+
+
+	
 CREATE OR REPLACE FUNCTION get_filtered_schedule_view(d date, from_town varchar, to_town varchar)
 RETURNS SETOF schedule_view
 LANGUAGE SQL AS $$
@@ -20,12 +24,19 @@ LANGUAGE SQL AS $$
 		FROM schedule_view
 		WHERE date = d
 		AND "from" = from_town
-		AND "to" = to_town;
+		AND "to" = to_town
+		AND id != 0
+		ORDER BY (date);
 $$;
+
+
+
 
 CREATE OR REPLACE FUNCTION get_schedule_view()
 RETURNS SETOF schedule_view
 LANGUAGE SQL AS $$
 	SELECT * 
-	FROM schedule_view;
+	FROM schedule_view
+	WHERE id != 0
+	ORDER BY (date);
 $$;

@@ -4,7 +4,7 @@
 #include "database/database.h"
 
 AircraftPage::AircraftPage(QWidget *parent) :
-    Page("aircrafts", parent),
+    Page("самолеты", parent),
     ui(new Ui::AircraftPage)
 {
     ui->setupUi(this);
@@ -16,14 +16,12 @@ AircraftPage::AircraftPage(QWidget *parent) :
         return;
     }
     ui->aircraftTableView->setModel(model);
-    ui->aircraftTableView->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-    ui->aircraftTableView->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-    ui->aircraftTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->aircraftTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->aircraftTableView->hideColumn(0);
+    headers = {"Название", "Кол-во мест"};
+    setupTable(ui->aircraftTableView, model, headers);
 
     connect(ui->aircraftTableView, &QTableView::doubleClicked, this, &AircraftPage::openEditAircraftDialog);
     connect(ui->addPushButton, &QPushButton::clicked, this, &AircraftPage::openAddAircraftDialog);
+    connect(ui->pushButton, &QPushButton::clicked, this, &AircraftPage::update);
 }
 
 AircraftPage::~AircraftPage()
@@ -54,5 +52,6 @@ void AircraftPage::update()
         Logger::code(this, model->lastError());
         return;
     }
+    setupTable(ui->aircraftTableView, model, headers);
     ui->aircraftTableView->setModel(model);
 }

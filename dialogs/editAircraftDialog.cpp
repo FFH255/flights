@@ -10,7 +10,7 @@ EditAircraftDialog::EditAircraftDialog(QWidget *parent, const QModelIndex *index
     ui(new Ui::EditAircraftDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Edit");
+    this->setWindowTitle("Редактирование");
     connect(ui->applyPushButton, &QPushButton::clicked, this, &EditAircraftDialog::onApplyPushButtonClicked);
     connect(ui->deletePushButton, &QPushButton::clicked, this, &EditAircraftDialog::onDeletePushButtonClicked);
     connect(ui->closePushButton, &QPushButton::clicked, this, &EditAircraftDialog::onClosePushButtonClicked);

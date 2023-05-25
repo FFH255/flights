@@ -12,6 +12,7 @@ SOURCES += \
     database/database.cpp \
     database/models/aircraft.cpp \
     database/models/flight.cpp \
+    database/models/ticket.cpp \
     database/models/town.cpp \
     dialogs/editAircraftDialog.cpp \
     dialogs/editFlightDialog.cpp \
@@ -23,7 +24,6 @@ SOURCES += \
     mainwindow.cpp \
     pages/aircraftPage.cpp \
     pages/flightsPage.cpp \
-    pages/homepage.cpp \
     pages/page.cpp \
     pages/schedulePage.cpp \
     pages/ticketspage.cpp \
@@ -33,6 +33,7 @@ HEADERS += \
     database/database.h \
     database/models/aircraft.h \
     database/models/flight.h \
+    database/models/ticket.h \
     database/models/town.h \
     dialogs/editAircraftDialog.h \
     dialogs/editFlightDialog.h \
@@ -45,7 +46,6 @@ HEADERS += \
     models/townModel.h \
     pages/aircraftPage.h \
     pages/flightsPage.h \
-    pages/homepage.h \
     pages/page.h \
     pages/schedulePage.h \
     pages/ticketspage.h \
@@ -60,7 +60,6 @@ FORMS += \
     mainwindow.ui \
     pages/aircraftPage.ui \
     pages/flightsPage.ui \
-    pages/homepage.ui \
     pages/schedulePage.ui \
     pages/ticketspage.ui \
     pages/townspage.ui

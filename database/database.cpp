@@ -50,13 +50,13 @@ QSqlQueryModel *Database::query(QString string)
 
 QSqlQueryModel *Database::getAllTowns()
 {
-    QString queryString = QString("SELECT * FROM town;");
+    QString queryString = QString("SELECT * FROM select_towns();");
     return query(queryString);
 }
 
 QSqlQueryModel *Database::getTownByID(int id)
 {
-    QString queryString = QString("SELECT * FROM town WHERE id = %1").arg(id);
+    QString queryString = QString("SELECT * FROM select_town_by_id(%1)").arg(id);
     return query(queryString);
 }
 
@@ -96,13 +96,13 @@ QSqlQueryModel *Database::addTown(QString town, QString country)
 
 QSqlQueryModel *Database::getAllAircrafts()
 {
-    QString queryString = QString("SELECT * FROM airplane;");
+    QString queryString = QString("SELECT * FROM select_airplanes();");
     return query(queryString);
 }
 
 QSqlQueryModel *Database::getAircraftByID(int id)
 {
-    QString queryString = QString("SELECT * FROM airplane WHERE id = %1").arg(id);
+    QString queryString = QString("SELECT * FROM select_airplane_by_id(%1);").arg(id);
     return query(queryString);
 }
 
@@ -148,13 +148,13 @@ QSqlQueryModel *Database::getAvailableModels(QString date)
 
 QSqlQueryModel *Database::getAllFlights()
 {
-    QString queryString = QString("SELECT * FROM flight_view");
+    QString queryString = QString("SELECT * FROM select_flight_view();");
     return query(queryString);
 }
 
 QSqlQueryModel *Database::getFlightByID(int id)
 {
-    QString queryString = QString("SELECT * FROM flight_view WHERE id = %1").arg(id);
+    QString queryString = QString("SELECT * FROM select_flight_view_by_id(%1);").arg(id);
     return query(queryString);
 }
 
@@ -191,5 +191,58 @@ QSqlQueryModel *Database::addFlight(QString date, QString from, QString to, QStr
                               .arg(airplane)
                               .arg(price);
     return query(queryString);
+}
+
+
+//SHCEDULE
+
+
+QSqlQueryModel *Database::getSchedule()
+{
+    QString queryString = QString("SELECT * FROM get_schedule_view();");
+    return query(queryString);
+}
+
+QSqlQueryModel *Database::getFilteredSchedule(QString date, QString from, QString to)
+{
+    QString queryString = QString("SELECT * FROM get_filtered_schedule_view('%1'::date, '%2', '%3');")
+                              .arg(date)
+                              .arg(from)
+                              .arg(to);
+    return query(queryString);
+}
+
+QSqlQueryModel *Database::getAllTickets()
+{
+    QString queryString = QString("SELECT * FROM get_tickets()");
+    return query(queryString);
+}
+
+
+//TICKETS
+
+
+QSqlQueryModel *Database::reserveTicketByID(int flightId)
+{
+    QString queryString = QString("CALL reserve_ticket(%1);").arg(flightId);
+    return query(queryString);
+}
+
+QSqlQueryModel *Database::reserveTicketByIndex(const QModelIndex *index)
+{
+    int id = getIdByIndex(index);
+    return reserveTicketByID(id);
+}
+
+QSqlQueryModel *Database::refundTicketByID(int id)
+{
+    QString queryString = QString("CALL refund_ticket(%1)").arg(id);
+    return query(queryString);
+}
+
+QSqlQueryModel *Database::refundTicketByIndex(const QModelIndex *index)
+{
+    int id = getIdByIndex(index);
+    return refundTicketByID(id);
 }
 

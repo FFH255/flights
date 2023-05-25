@@ -10,7 +10,7 @@ EditTownDialog::EditTownDialog(QWidget *parent, const QModelIndex *index) :
     ui(new Ui::EditTownDialog)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Edit");
+    this->setWindowTitle("Редактирование");
 
     connect(ui->applyPushButton, &QPushButton::clicked, this, &EditTownDialog::onApplyPushButtonClicked);
     connect(ui->deletePushButton, &QPushButton::clicked, this, &EditTownDialog::onDeletePushButtonClicked);

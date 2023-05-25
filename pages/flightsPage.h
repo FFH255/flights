@@ -15,6 +15,7 @@ class FlightsPage : public Page
 
 private:
     EditFlightDialog *editDialog;
+    QStringList headers;
 
 public:
     explicit FlightsPage(QWidget *parent = nullptr);

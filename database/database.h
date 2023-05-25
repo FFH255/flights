@@ -43,6 +43,17 @@ public:
     static QSqlQueryModel *updateFlight(int id, QString date, QString from, QString to, QString airplane, int price);
     static QSqlQueryModel *removeFlight(int id);
     static QSqlQueryModel *addFlight(QString date, QString from, QString to, QString airplane, int price);
+
+    //shedule
+    static QSqlQueryModel *getSchedule();
+    static QSqlQueryModel *getFilteredSchedule(QString date, QString from, QString to);
+
+    //tickets
+    static QSqlQueryModel *getAllTickets();
+    static QSqlQueryModel *reserveTicketByID(int flightId);
+    static QSqlQueryModel *reserveTicketByIndex(const QModelIndex *index);
+    static QSqlQueryModel *refundTicketByID(int id);
+    static QSqlQueryModel *refundTicketByIndex(const QModelIndex *index);
 };
 
 #endif // DATABASE_H
