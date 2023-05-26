@@ -17,17 +17,9 @@ BEGIN
 			SET reserved_tickets = reserved_tickets + 1 
 			WHERE id = f_id;
 		CALL insert_ticket(f_id);
-		COMMIT;
-	ELSE 
-		ROLLBACK;
 	END IF;
 END;
 $$;
-
-SELECT 
-FROM (SELECT f.reserved_tickets
-	  FROM flight f
-	  WHERE id = 2) AS f
 
 -- Возврат билета
 
@@ -40,9 +32,6 @@ BEGIN
 			WHERE id  = (SELECT flight_id FROM ticket 
 							WHERE id = t_id);
 		CALL delete_ticket(t_id);
-		COMMIT;
-	ELSE 
-		ROLLBACK;
 	END IF;
 END;
 $$;

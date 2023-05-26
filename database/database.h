@@ -18,6 +18,7 @@ public:
     void disconnect();
 
     static int getIdByIndex(const QModelIndex *index);
+    static QSqlQueryModel *whoami();
 
     //town
     static QSqlQueryModel *getAllTowns();

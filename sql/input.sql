@@ -33,6 +33,8 @@ SELECT * FROM town;
 
 SELECT * FROM schedule_view;
 
+DELETE FROM ticket;
+
 SELECT * FROM ticket;
   
 select * from get_tickets();

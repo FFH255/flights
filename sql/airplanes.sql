@@ -6,10 +6,12 @@ FROM (SELECT model
 	  FROM airplane 
 	  WHERE id != ALL(SELECT airplane_id 
 					  FROM flight
-					  WHERE date = d)) AS a
+					  WHERE date = d)
+	 AND id != 0) AS a
 GROUP BY(model)
 $$;
 
+drop function select_airplane_by_model_and_date(m varchar, d date)
 
 CREATE OR REPLACE FUNCTION select_airplane_by_model_and_date(m varchar, d date)
 RETURNS airplane

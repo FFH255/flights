@@ -35,6 +35,12 @@ int Database::getIdByIndex(const QModelIndex *index)
     return index->sibling(index->row(), 0).data().toInt();
 }
 
+QSqlQueryModel *Database::whoami()
+{
+    QString queryString = QString("SELECT CURRENT_USER;");
+    return query(queryString);
+}
+
 QSqlQueryModel *Database::query(QString string)
 {
     QSqlQuery query = QSqlQuery(QSqlDatabase::database());

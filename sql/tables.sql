@@ -42,7 +42,7 @@ CREATE TABLE ticket (
 	CONSTRAINT fk_flight_id
 		FOREIGN KEY (flight_id)
 		REFERENCES flight(id)
-		ON DELETE SET DEFAULT
+		ON DELETE CASCADE
 );
 
 DROP TABLE ticket CASCADE;
@@ -69,7 +69,7 @@ LANGUAGE SQL AS $$
 	WHERE id = t_id;
 $$;
 
-CREATE PROCEDURE insert_town(n varchar(255), c varchar(128))
+CREATE OR REPLACE PROCEDURE insert_town(n varchar(255), c varchar(128))
 LANGUAGE plpgsql AS $$
 BEGIN
 	INSERT INTO town(name, country)
@@ -87,7 +87,7 @@ BEGIN
 END;
 $$;
 
-CREATE PROCEDURE delete_town(t_id int)
+CREATE OR REPLACE PROCEDURE delete_town(t_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	DELETE FROM town
@@ -114,7 +114,7 @@ LANGUAGE SQL AS $$
 	WHERE id = a_id;
 $$;
 
-CREATE PROCEDURE insert_airplane(m varchar(32), s SMALLINT)
+CREATE OR REPLACE PROCEDURE insert_airplane(m varchar(32), s SMALLINT)
 LANGUAGE plpgsql AS $$
 BEGIN
 	INSERT INTO airplane(model, seats)
@@ -132,7 +132,7 @@ BEGIN
 END;
 $$;
 
-CREATE PROCEDURE delete_airplane(a_id int)
+CREATE OR REPLACE PROCEDURE delete_airplane(a_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	DELETE FROM airplane
@@ -159,7 +159,7 @@ LANGUAGE SQL AS $$
 	WHERE id = f_id;
 $$;
 
-CREATE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price int)
+CREATE OR REPLACE PROCEDURE insert_flight(d date, ft_id int, tt_id int, a_id int, t_price int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	INSERT INTO flight(date, from_town_id, to_town_id, airplane_id, ticket_price, reserved_tickets)
@@ -189,7 +189,7 @@ BEGIN
 END;
 $$;
 
-CREATE PROCEDURE delete_flight(f_id int)
+CREATE OR REPLACE PROCEDURE delete_flight(f_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	DELETE FROM flight
@@ -216,7 +216,7 @@ LANGUAGE SQL AS $$
 	WHERE id = t_id;
 $$;
 
-CREATE PROCEDURE insert_ticket(f_id int)
+CREATE OR REPLACE PROCEDURE insert_ticket(f_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	INSERT INTO ticket(flight_id, booking_date)
@@ -234,7 +234,7 @@ BEGIN
 END;
 $$;
 
-CREATE PROCEDURE delete_ticket(t_id int)
+CREATE OR REPLACE PROCEDURE delete_ticket(t_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	DELETE FROM ticket

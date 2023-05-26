@@ -1,5 +1,5 @@
 CREATE OR REPLACE VIEW schedule_view
-AS (SELECT f.id, f.date, ft.name as "from", tt.name AS "to" -- Корреляция, having, group by, агрегатная функция
+AS (SELECT f.id, f.date, ft.name as "from", tt.name AS "to", f.ticket_price AS price -- Корреляция, having, group by, агрегатная функция
 	FROM flight f
 	INNER JOIN airplane a
 	ON f.airplane_id = a.id

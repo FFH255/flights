@@ -26,6 +26,8 @@ void Logger::code(QWidget *parent, QSqlError error)
 {
     QMessageBox messageBox(parent);
 
+    qDebug() << "NATIVE ERROR CODE:" << error.nativeErrorCode();
+
     switch(error.type())
     {
 

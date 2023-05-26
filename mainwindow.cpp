@@ -7,7 +7,9 @@
 #include "pages/ticketspage.h"
 #include "pages/townspage.h"
 #include "qpushbutton.h"
+#include "qsqlrecord.h"
 #include "ui_mainwindow.h"
+#include "database/database.h"
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -19,11 +21,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     connect(&loginDialog, &LoginDialog::loggedIn, this, &MainWindow::show);
     loginDialog.exec();
 
-    pages.append(new FlightsPage(this));
-    pages.append(new TicketsPage(this));
-    pages.append(new TownsPage(this));
-    pages.append(new AircraftPage(this));
-    pages.append(new SchedulePage(this));
+    QSqlQueryModel *model = Database::whoami();
+    QString role = model->record(0).value("current_user").toString();
+
+    if (role == "user")
+    {
+        pages.append(new TicketsPage(this));
+        pages.append(new SchedulePage(this));
+    }
+
+    if (role == "admin")
+    {
+        pages.append(new FlightsPage(this));
+        pages.append(new TicketsPage(this));
+        pages.append(new TownsPage(this));
+        pages.append(new AircraftPage(this));
+        pages.append(new SchedulePage(this));
+    }
 
     pageController = new QStackedWidget(this);
 

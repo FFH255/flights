@@ -138,7 +138,7 @@ $$;
 
 -- update 
 
-CREATE PROCEDURE update_flight_view(f_id int, d date, ft varchar, tt varchar, a varchar, t_price int)
+CREATE OR REPLACE PROCEDURE update_flight_view(f_id int, d date, ft varchar, tt varchar, a varchar, t_price int)
 LANGUAGE plpgsql AS $$
 BEGIN
 	UPDATE flight_view
@@ -149,7 +149,7 @@ $$;
 
 --inseft
 
-CREATE PROCEDURE insert_flight_view(d date, ft varchar, tt varchar, a varchar, p int)
+CREATE OR REPLACE PROCEDURE insert_flight_view(d date, ft varchar, tt varchar, a varchar, p int)
 LANGUAGE plpgsql AS $$
 BEGIN
 INSERT INTO flight_view(date, "from", "to", airplane, price)
@@ -159,7 +159,7 @@ $$;
 
 --delete
 
-CREATE PROCEDURE delete_flight_view(f_id int)
+CREATE OR REPLACE PROCEDURE delete_flight_view(f_id int)
 LANGUAGE plpgsql AS $$
 BEGIN
 DELETE FROM flight_view
