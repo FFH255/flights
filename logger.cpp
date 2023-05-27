@@ -10,6 +10,7 @@ Logger::Logger()
 void Logger::custom(QWidget *parent, QString message, QString debug)
 {
     QMessageBox messageBox(parent);
+    messageBox.setWindowTitle("Внимание");
     messageBox.setIcon(QMessageBox::Information);
     messageBox.setText(message);
     messageBox.exec();
@@ -26,16 +27,24 @@ void Logger::code(QWidget *parent, QSqlError error)
 {
     QMessageBox messageBox(parent);
 
-    qDebug() << "NATIVE ERROR CODE:" << error.nativeErrorCode();
+    qDebug() << "[КОД ОШИБКИ]:" << error.nativeErrorCode();
+
+    switch(error.nativeErrorCode().toInt())
+    {
+    case CustomErrorCodes::UniqueValue:
+        messageBox.setWindowTitle("Неуникальное значение");
+        messageBox.setIcon(QMessageBox::Information);
+        messageBox.setText("Запись уже существует");
+        break;
+    }
 
     switch(error.type())
     {
-
     case QSqlError::NoError:
     case QSqlError::ConnectionError:
-        messageBox.setWindowTitle("Connection error");
+        messageBox.setWindowTitle("Ошибка соединения");
         messageBox.setIcon(QMessageBox::Warning);
-        messageBox.setText("Incorrect login or password");
+        messageBox.setText("Неправильный логин или пароль");
         break;
     case QSqlError::StatementError:
     case QSqlError::TransactionError:
@@ -43,7 +52,7 @@ void Logger::code(QWidget *parent, QSqlError error)
         break;
     }
 
-    qDebug() << "[FROM LOGGER]: " << error.text();
+    qDebug() << "[СООБЩЕНИЕ ОБ ОШИБКИ]: " << error.text();
     messageBox.exec();
 }
 

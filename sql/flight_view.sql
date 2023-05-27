@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW flight_view(id, date, "from", "to", airplane, price, reserved_tickets, all_tickets, status) AS ( -- CASE
+CREATE OR REPLACE VIEW flight_view(id, date, "from", "to", airplane, price, reserved_tickets, all_tickets, status, last_updated) AS ( -- CASE
 	SELECT f.id, 
 		f.date, 
 		tf.name, 
@@ -9,7 +9,8 @@ CREATE OR REPLACE VIEW flight_view(id, date, "from", "to", airplane, price, rese
 		a.seats,
 		CASE WHEN CURRENT_DATE = f.date THEN 'занят'
 			 WHEN CURRENT_DATE < f.date THEN 'ожидает'
-		 	 WHEN CURRENT_DATE > f.date THEN 'завершен' END
+		 	 WHEN CURRENT_DATE > f.date THEN 'завершен' END,
+		f.last_updated
 	FROM flight f
 	INNER JOIN town tf
 	ON f.from_town_id = tf.id

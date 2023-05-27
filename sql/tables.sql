@@ -19,7 +19,8 @@ CREATE TABLE flight (
 	airplane_id INT NOT NULL DEFAULT 0,
 	ticket_price INT NOT NULL
 		CHECK (ticket_price >= 0),
-	reserved_tickets SMALLINT NOT NULL 
+	reserved_tickets SMALLINT NOT NULL,
+	last_updated TIMESTAMP
 		CHECK (reserved_tickets >= 0),
 	CONSTRAINT fk_from_town_id 
 		FOREIGN KEY (from_town_id)
@@ -35,6 +36,7 @@ CREATE TABLE flight (
 		ON DELETE SET DEFAULT
 );
 
+
 CREATE TABLE ticket (
 	id SERIAL PRIMARY KEY,
 	flight_id INT NOT NULL DEFAULT 0,
@@ -49,6 +51,34 @@ DROP TABLE ticket CASCADE;
 DROP TABLE flight CASCADE;
 DROP TABLE town CASCADE;
 DROP TABLE airplane CASCADE;
+
+-- LAST UPDATED
+
+CREATE OR REPLACE FUNCTION set_last_updated()
+RETURNS TRIGGER
+LANGUAGE plpgsql AS $$
+BEGIN
+	NEW.last_updated := CURRENT_TIMESTAMP;
+	RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE TRIGGER flight_last_updated_trigger
+BEFORE INSERT OR UPDATE OR DELETE 
+ON flight
+FOR EACH ROW
+EXECUTE PROCEDURE set_last_updated();
+
+-- INDEXES
+
+CREATE UNIQUE INDEX ON town (name, country);
+CREATE INDEX idx_town_id ON town USING BTREE(id);
+CREATE INDEX idx_flight_id ON flight USING HASH(id);
+CREATE INDEX idx_ticket_flight_id ON ticket USING BTREE(flight_id);
+
+DROP INDEX idx_town_id;
+DROP INDEX idx_flight_id;
+DROP INDEX idx_ticket_flight_id;
 
 --TOWN
 

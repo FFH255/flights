@@ -3,7 +3,7 @@
 #include "qdatetime.h"
 #include "qsqlrecord.h"
 
-Flight::Flight(int id, QString date, QString from, QString to, QString airplane, int price, int reservedTickets, int allTickets, QString status)
+Flight::Flight(int id, QString date, QString from, QString to, QString airplane, int price, int reservedTickets, int allTickets, QString status, QString lastUpdated)
 {
     this->id = id;
     this->date = date;
@@ -14,6 +14,7 @@ Flight::Flight(int id, QString date, QString from, QString to, QString airplane,
     this->reservedTickets = reservedTickets;
     this->allTickets = allTickets;
     this->status = status;
+    this->lastUpdated = lastUpdated;
 }
 
 Flight::Flight(QSqlQueryModel *model)
@@ -28,5 +29,6 @@ Flight::Flight(QSqlQueryModel *model)
     this->reservedTickets = record.value("reserved_tickets").toInt();
     this->allTickets = record.value("all_tickets").toInt();
     this->status = record.value("status").toString();
+    this->lastUpdated = record.value("last_updated").toString();
 }
 

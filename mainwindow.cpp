@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("Flights Application");
 
     LoginDialog loginDialog;
     connect(&loginDialog, &LoginDialog::loggedIn, this, &MainWindow::show);

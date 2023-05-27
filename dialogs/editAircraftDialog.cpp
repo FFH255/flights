@@ -48,12 +48,12 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
     if(name == "")
     {
-        Logger::custom(this, "Please, enter towns's");
+        Logger::custom(this, "Введите модель самолета");
         return;
     }
     if(seats <= 0)
     {
-        Logger::custom(this, "Number of seats should be greated then zero.");
+        Logger::custom(this, "Количество мест в самолете должно быть больше чем 0");
         return;
     }
 
@@ -73,7 +73,7 @@ void EditAircraftDialog::onApplyPushButtonClicked()
 
     if (name == aircraftOrigin->model && seats == aircraftOrigin->seats)
     {
-        Logger::custom(this, "Chage something before applying.");
+        Logger::custom(this, "Измените данные, чтобы сохранить");
         return;
     }
 

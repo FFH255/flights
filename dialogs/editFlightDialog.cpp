@@ -99,7 +99,7 @@ void EditFlightDialog::onApplyPushButtonClicked()
 
     if (from == to)
     {
-        Logger::custom(this, "The destination city and the departure city cannot be the same");
+        Logger::custom(this, "Город отправления и город назначения не могут быть одинаковыми");
         return;
     }
 
@@ -123,7 +123,7 @@ void EditFlightDialog::onApplyPushButtonClicked()
         flightOrigin->airplane == airplane &&
         flightOrigin->price == price)
     {
-        Logger::custom(this, "Change something before applying");
+        Logger::custom(this, "Измените данные, чтобы сохранить");
         return;
     }
 

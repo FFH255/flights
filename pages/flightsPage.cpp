@@ -8,7 +8,7 @@ FlightsPage::FlightsPage(QWidget *parent) :
     ui(new Ui::FlightsPage)
 {
     ui->setupUi(this);
-    headers = {"Дата", "Откуда", "Куда", "Самолет", "Цена билета", "Кол-во броней", "Всево билетов", "Статус"};
+    headers = {"Дата", "Откуда", "Куда", "Самолет", "Цена билета", "Кол-во броней", "Всево билетов", "Статус", "Обновлен"};
 
     QSqlQueryModel *model = Database::getAllFlights();
 

@@ -5,6 +5,11 @@
 #include "qsqlerror.h"
 #include "qwidget.h"
 
+enum CustomErrorCodes
+{
+    UniqueValue = 23505,
+};
+
 enum MessageType
 {
     ServerFail,

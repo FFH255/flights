@@ -49,13 +49,13 @@ void EditTownDialog::onApplyPushButtonClicked()
 
     if (name == "")
     {
-        Logger::custom(this, "Please enter town's name", "Town's name is empty string");
+        Logger::custom(this, "Введите название города", "Town's name is empty string");
         return;
     }
 
     if (country == "")
     {
-        Logger::custom(this, "Please enter country's name", "Country's name is empty string");
+        Logger::custom(this, "Введите название страны", "Country's name is empty string");
         return;
     }
 
@@ -76,7 +76,7 @@ void EditTownDialog::onApplyPushButtonClicked()
 
     if (townOrigin->name == name && townOrigin->country == country)
     {
-        Logger::custom(this, "Change something before applying");
+        Logger::custom(this, "Измените данные, чтобы подтвердить");
         return;
     }
     QSqlQueryModel *model = Database::updateTown(townOrigin->id, name, country);
